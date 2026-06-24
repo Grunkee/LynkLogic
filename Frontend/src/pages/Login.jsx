@@ -69,7 +69,7 @@ export default function Login() {
         </form>
 
         <p>
-          {isSignUp ? 'No account? ' : " Have account?"}
+          {signUp ? 'No account? ' : " Have account?"}
           <span 
             onClick={() => {
               setSignUp(!signUp);
