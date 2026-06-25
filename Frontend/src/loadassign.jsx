@@ -1,34 +1,34 @@
 //import react + supabase
 
-import React, {useState} from 'react'
-import {createClient} from '@supabase/supabase-js'
-
-//connect to supabase
-const supabase = createClient (process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
+import React, { useState } from 'react'
+import { supabase } from './supabase_client'
 
 //function for assigning loads
 function AssignLoad() {
 
-    const[truckDriver, setTruckDriver] = useState("")
-    const[pickupLocation, setPickupLocation] = useState("")
-    const[deliveryLocation, setDeliveryLocation] = useState("")
-    const[status, setStatus] = useState("")
-    const[date, setDate] = useState("")
+    const [truckDriver, setTruckDriver] = useState("")
+    const [pickupLocation, setPickupLocation] = useState("")
+    const [deliveryLocation, setDeliveryLocation] = useState("")
+    const [status, setStatus] = useState("")
+    const [date, setDate] = useState("")
 
     //function for submit button
     async function submitButton() {
 
         //save values to supabase
-        const{error} = await supabase
+        const { error } = await supabase
             .from("loads")
-            .insert({ truck_driver: truckDriver,
+            .insert({
+                driver_id: truckDriver,
                 pickup_location: pickupLocation,
-                delivery_location: deliveryLocation,
+                deliver_location: deliveryLocation,
                 status: status,
-                date: date})
-    
+                date: date
+            })
+
         //errors, alert when something goes wrong
         if (error) {
+            console.error(error)
             alert("Please try again. Something went wrong.")
         }
 
@@ -67,7 +67,7 @@ function AssignLoad() {
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
             />
-            <button onClick={submitButton} >
+            <button onClick={submitButton}>
                 Add Load
             </button>
         </div>
