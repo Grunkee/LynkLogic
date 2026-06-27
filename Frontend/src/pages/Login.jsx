@@ -28,7 +28,7 @@ export default function Login() {
 					throw error;
 				}
 				setMessage({ type: 'success', text: 'Logged in successfully!' });
-				navigate("/table")
+				navigate("/dashboard")
 
 			}
 		} catch (error) {
