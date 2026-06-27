@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import React, { useState } from 'react';
 import { supabase } from '../supabase_client.js';
 import "./Login.css"
@@ -8,6 +9,7 @@ export default function Login() {
 	const [password, setPassword] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState({ type: '', text: '' });
+	const navigate = useNavigate();
 
 	const handleAuth = async (e) => {
 		e.preventDefault();
@@ -26,6 +28,8 @@ export default function Login() {
 					throw error;
 				}
 				setMessage({ type: 'success', text: 'Logged in successfully!' });
+				navigate("/table")
+
 			}
 		} catch (error) {
 			setMessage({ type: 'error', text: error.message });
@@ -41,13 +45,13 @@ export default function Login() {
 					{signUp ? 'Sign Up' : 'Log In'}
 				</h2>
 				{message.text && (
-					<div className={'message ${message.type}'}>
+					<div className={`message ${message.type}`}>
 						{message.text}
 					</div>
 				)}
-				<form onSubmit={handleAuth}>
-					<div>
-						<label>Email Address</label>
+				<form onSubmit={handleAuth} className='login-form'>
+					<div className='form-group'>
+						<label>Email Address </label>
 						<input
 							type="email"
 							value={email}
@@ -56,8 +60,8 @@ export default function Login() {
 							required
 						/>
 					</div>
-					<div>
-						<label>Password</label>
+					<div className='form-group'>
+						<label>Password </label>
 						<input
 							type="password"
 							value={password}
@@ -71,15 +75,15 @@ export default function Login() {
 					</button>
 				</form>
 
-				<p>
-					{!signUp ? 'No account? ' : " Have account?"}
+				<p className='toggle-text'>
+					{!signUp ? 'No account? ' : " Have account? "}
 					<span
 						onClick={() => {
 							setSignUp(!signUp);
 							setMessage({ type: '', text: '' });
 						}}
 					>
-						{!signUp ? 'Sign Up' : ' Log In '}
+						{!signUp ? 'Sign Up' : 'Log In '}
 					</span>
 				</p>
 			</div>
