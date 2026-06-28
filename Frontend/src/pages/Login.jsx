@@ -29,6 +29,10 @@ export default function Login() {
 				}
 				setMessage({ type: 'success', text: 'Logged in successfully!' });
 				navigate("/dashboard")
+				// navigates to the login table page once the user has successfully logged in
+				// TODO make a home page for the user to go to after logging in
+				// TODO add a way for the user to signup, by inputting credentials
+				navigate("/table")
 
 			}
 		} catch (error) {
@@ -39,6 +43,7 @@ export default function Login() {
 	};
 
 	return (
+
 		<div className='login-container'>
 			<div className='login-card'>
 				<h2 className='login-title'>
@@ -76,7 +81,7 @@ export default function Login() {
 				</form>
 
 				<p className='toggle-text'>
-					{!signUp ? 'No account? ' : " Have account? "}
+					{!signUp ? 'No Account? ' : " Have Account? "}
 					<span
 						onClick={() => {
 							setSignUp(!signUp);
