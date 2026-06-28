@@ -264,7 +264,7 @@ function markNotificationAsRead(notificationId) {
                   { label: "Date", key: "dateAssigned" },
                   { label: "Status", key: "status" },
                 ].map((col) => (
-                  <th key={col.key} onClick={() => handleSort(col.key)} style={{ cursor: "pointer" }}>
+                <th key={col.key} onClick={() => handleSort(col.key)} style={{ cursor: "pointer", whiteSpace: "nowrap" }}>
                     {col.label}
                     <SortArrow colKey={col.key} />
                   </th>
