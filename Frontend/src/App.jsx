@@ -36,9 +36,6 @@ function Dashboard({ initialPage = "loadassignments" }) {
             <button style={{ border: "1px solid rgba(255,255,255,0.25)", borderRadius: "999px", background: "rgba(255,255,255,0.08)", color: "white", padding: "10px 16px", cursor: "pointer", flex: "1 1 120px", minWidth: "110px", maxWidth: "140px" }}>
               Today
             </button>
-            <button style={{ border: "1px solid rgba(255,255,255,0.25)", borderRadius: "999px", background: "rgba(255,255,255,0.08)", color: "white", padding: "10px 16px", cursor: "pointer", flex: "1 1 120px", minWidth: "110px", maxWidth: "140px" }}>
-              Settings
-            </button>
           </div>
         </div>
       </header>
