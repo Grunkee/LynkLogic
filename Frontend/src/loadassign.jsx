@@ -12,7 +12,11 @@ const COLORS = {
 };
 
 //function for assigning loads
+<<<<<<< HEAD
 function AssignLoad( {onClose }) {
+=======
+function AssignLoad({ onClose }) {
+>>>>>>> b187a25835dade734ae2725fa6ae090adf27f5ad
 
     const [truckDriver, setTruckDriver] = useState("")
     const [pickupLocation, setPickupLocation] = useState("")
@@ -51,10 +55,14 @@ function AssignLoad( {onClose }) {
             alert("Please try again. Something went wrong.")
         }
 
-        //no errors, alert the load was assigned
+        //no errors, alert the load was assigned, then close the popup
         else {
             alert("The new load was assigned.")
+<<<<<<< HEAD
             onClose()
+=======
+            if (onClose) onClose()
+>>>>>>> b187a25835dade734ae2725fa6ae090adf27f5ad
         }
     }
 

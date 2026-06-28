@@ -305,7 +305,7 @@ function markNotificationAsRead(notificationId) {
               ✕
             </button>
 
-            <AssignLoad />
+            <AssignLoad onClose={() => setShowModal(false)} />
           </div>
         </div>
       )}
