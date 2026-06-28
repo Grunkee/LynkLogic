@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { supabase } from './supabase_client'
 
 //function for assigning loads
-function AssignLoad() {
+function AssignLoad({ onClose }) {
 
     const [truckDriver, setTruckDriver] = useState("")
     const [pickupLocation, setPickupLocation] = useState("")
@@ -32,9 +32,10 @@ function AssignLoad() {
             alert("Please try again. Something went wrong.")
         }
 
-        //no errors, alert the load was assigned
+        //no errors, alert the load was assigned, then close the popup
         else {
             alert("The new load was assigned.")
+            if (onClose) onClose()
         }
     }
 
