@@ -45,7 +45,7 @@ const SHIPMENTS = [
   },
 ];
 
-export default function ShipmentTable() {
+export default function Shipments() {
 
   const [driverFilter, setDriverFilter] = useState("All Drivers");
   const [statusFilter, setStatusFilter] = useState("All");
