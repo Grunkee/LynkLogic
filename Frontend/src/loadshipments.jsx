@@ -214,7 +214,7 @@ function getStatusStyle(status) {
   return { backgroundColor: "#757575", color: "#fff" };
 }
 
-export default function LoadShipments() {
+export default function LoadShipments({ onRoleNavigate }) {
   const [shipments] = useState(DUMMY_SHIPMENTS);
   const [filterStatus, setFilterStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
@@ -272,7 +272,9 @@ export default function LoadShipments() {
           <button style={{ border: "none", borderRadius: "12px", background: "#f1f5f9", color: "#334155", padding: "10px 16px", cursor: "pointer" }}>
             Manager
           </button>
-          <button style={{ border: "none", borderRadius: "12px", background: "#f1f5f9", color: "#334155", padding: "10px 16px", cursor: "pointer" }}>
+          <button 
+            onClick={() => onRoleNavigate && onRoleNavigate("hours")}
+            style={{ border: "none", borderRadius: "12px", background: "#f1f5f9", color: "#334155", padding: "10px 16px", cursor: "pointer" }}>
             Truck Driver
           </button>
           <button style={{ border: "none", borderRadius: "12px", background: "#f1f5f9", color: "#334155", padding: "10px 16px", cursor: "pointer" }}>
