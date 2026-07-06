@@ -90,11 +90,30 @@ function PastDeliveries() {
                             borderBottom: "1px solid #ddd" 
                             }}>
                             
-                            <td style={{ padding: "10px" }}>LD{load.load_id}</td>
-                            <td style={{ padding: "10px" }}>{load.drivers.first_name} {load.drivers.last_name}</td>
-                            <td style={{ padding: "10px" }}>{load.pickup_location}</td>
-                            <td style={{ padding: "10px" }}>{load.delivery_location}</td>
-                            <td style={{ padding: "10px" }}>{load.date}</td>
+                            <td style={{
+                                padding: "11px"
+                                }}>LD{load.load_id}
+                            </td>
+
+                            <td style={{
+                                padding: "11px"
+                                }}>{load.drivers.first_name} {load.drivers.last_name}
+                            </td>
+
+                            <td style={{
+                                padding: "11px"
+                                }}>{load.pickup_location}
+                            </td>
+                           
+                            <td style={{
+                                padding: "11px"
+                                }}>{load.delivery_location}
+                            </td>
+
+                            <td style={{
+                                padding: "11px"
+                                }}>{load.date}
+                            </td>
 
                         </tr>
                     ))}
