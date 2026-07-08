@@ -80,6 +80,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
           <DriverSidebar currentPage={currentPage} onNavigate={handleNavigate} />
         ) : (
         <Sidebar currentPage={currentPage} onNavigate={handleNavigate} />
+        )}
         <main style={{ flex: 1, background: "#f5f5f5" }}>
           {renderMainContent()}
         </main>
