@@ -4,6 +4,7 @@ import LoadTable from "./loadtable";
 import { DATA_TEST } from "./loadhours.jsx";
 import LoadShipments from "./loadshipments";
 import Sidebar from "./Sidebar";
+import DriverSidebar from "./truckersidebar.jsx";
 import Login from "./pages/Login.jsx";
 import Hours from "./pages/hours.jsx";
 import "./App.css";
@@ -75,6 +76,9 @@ function Dashboard({ initialPage = "loadassignments" }) {
         </div>
       </header>
       <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
+        {currentPage === "hours" ? (
+          <DriverSidebar currentPage={currentPage} onNavigate={handleNavigate} />
+        ) : (
         <Sidebar currentPage={currentPage} onNavigate={handleNavigate} />
         <main style={{ flex: 1, background: "#f5f5f5" }}>
           {renderMainContent()}
