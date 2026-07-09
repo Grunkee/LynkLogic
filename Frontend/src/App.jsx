@@ -7,6 +7,7 @@ import Sidebar from "./Sidebar";
 import DriverSidebar from "./truckersidebar.jsx";
 import Login from "./pages/Login.jsx";
 import Hours from "./pages/hours.jsx";
+import CustomerLoads from "./CustomerLoads";
 import "./App.css";
 
 function Dashboard({ initialPage = "loadassignments" }) {
@@ -20,7 +21,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
   const handleAddHoursLog = (newLog) => {
     setWeeklyLogs((prevLogs) => [newLog, ...prevLogs]);
   };
-  
+
   useEffect(() => {
     setCurrentPage(initialPage);
   }, [initialPage]);
@@ -31,6 +32,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
       navigate("/shipments");
     } else if (page === "hours") {
       navigate("/hours");
+    } else if (page === "customerloads") {
+      navigate("/customerloads");
     } else {
       navigate("/dashboard");
     }
@@ -54,6 +57,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
             onAddLog={handleAddHoursLog}
           />
         );
+      case "customerloads":
+        return <CustomerLoads />;
       default:
         return <LoadTable />;
     }
@@ -79,7 +84,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
         {currentPage === "hours" ? (
           <DriverSidebar currentPage={currentPage} onNavigate={handleNavigate} />
         ) : (
-        <Sidebar currentPage={currentPage} onNavigate={handleNavigate} />
+          <Sidebar currentPage={currentPage} onNavigate={handleNavigate} />
         )}
         <main style={{ flex: 1, background: "#f5f5f5" }}>
           {renderMainContent()}
@@ -99,6 +104,7 @@ function App() {
         <Route path="/table" element={<Dashboard initialPage="loadassignments" />} />
         <Route path="/shipments" element={<Dashboard initialPage="shipments" />} />
         <Route path="/hours" element={<Dashboard key="hours" initialPage="hours" />} />
+        <Route path="/customerloads" element={<Dashboard initialPage="customerloads" />} />
       </Routes>
     </BrowserRouter>
   );

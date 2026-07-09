@@ -2,6 +2,7 @@ export default function Sidebar({ currentPage, onNavigate }) {
   const mainItems = [
     { id: "loadassignments", label: "Load Assignments" },
     { id: "shipments", label: "Shipments" },
+    { id: "customerloads", label: "Track My Deliveries" },
   ];
 
   const bottomItems = [
