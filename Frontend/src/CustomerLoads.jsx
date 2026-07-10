@@ -89,11 +89,11 @@ function CustomerLoads() {
         <tbody>
           {loads.map((load) => (
             <tr key={load.load_id} style={{ borderBottom: "1px solid #ddd" }}>
-              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle" }}>LD{load.load_id}</td>
-              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle" }}>{load.pickup_location}</td>
-              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle" }}>{load.delivery_location}</td>
-              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle" }}>{formatETA(load.eta)}</td>     
-              <td style={{ padding: "12px 16px", fontSize: "14px", verticalAlign: "middle" }}>
+              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle", textAlign: "center" }}>LD{load.load_id}</td>
+              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle", textAlign: "center"  }}>{load.pickup_location}</td>
+              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle", textAlign: "center"  }}>{load.delivery_location}</td>
+              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle", textAlign: "center"  }}>{formatETA(load.eta)}</td>     
+              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle", textAlign: "center"  }}>
   
 <span style={{
     ...getStatusStyle(load.status),
