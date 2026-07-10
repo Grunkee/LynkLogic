@@ -6,6 +6,10 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
     { id: "loadassignments", label: "Load Assignments", roles: ["dispatcher"] },
     { id: "shipments", label: "Shipments", roles: ["manager"] },
     { id: "customerloads", label: "Track My Deliveries", roles: ["customer"] },
+
+    { id: "hours", label: "Schedule", roles: ["driver"] },
+    { id: "messages", label: "Messages", roles: ["driver"], placeholder: true },
+    { id: "reports", label: "Make a Report", roles: ["driver"] },
   ];
 
   const mainItems = allItems.filter(item => item.roles.includes(role))
@@ -44,28 +48,40 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
       </div>
 
       <nav style={{ flex: 1, padding: "24px 16px", display: "flex", flexDirection: "column", gap: "18px" }}>
-        {mainItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => onNavigate(item.id)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              padding: "10px 14px",
-              border: "none",
-              borderRadius: "999px",
-              background: currentPage === item.id ? "#111827" : "transparent",
-              color: "#f8fafc",
-              cursor: "pointer",
-              fontSize: "15px",
-              textAlign: "left",
-            }}
-          >
-            <span style={{ width: "14px", height: "14px", borderRadius: "999px", background: currentPage === item.id ? "#f8fafc" : "#111827" }} />
-            {item.label}
-          </button>
-        ))}
+        {mainItems.map((item) => {
+          const isActive = currentPage === item.id;
+          const cursor = item.placeholder ? "default" : "pointer";
+          const handleClick = () => {
+            if (item.placeholder) {
+              return;
+            }
+            if (onNavigate) {
+              onNavigate(item.id);
+            }
+          };
+          return (
+            <button
+              key={item.id}
+              onClick={handleClick}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                padding: "10px 14px",
+                border: "none",
+                borderRadius: "999px",
+                background: currentPage === item.id ? "#111827" : "transparent",
+                color: "#f8fafc",
+                cursor: cursor,
+                fontSize: "15px",
+                textAlign: "left",
+              }}
+            >
+              <span style={{ width: "14px", height: "14px", borderRadius: "999px", background: currentPage === item.id ? "#f8fafc" : "#111827" }} />
+              {item.label}
+            </button>
+          );
+        })}
       </nav>
 
       <div style={{ padding: "20px 16px 24px", borderTop: "1px solid rgba(255,255,255,0.12)", display: "flex", flexDirection: "column", gap: "14px" }}>
