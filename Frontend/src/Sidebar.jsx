@@ -7,6 +7,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 		{ id: "Compliance", label: "Compliance Records", roles: ["dispatcher"] },
 		{ id: "shipments", label: "Shipments" },
 		{ id: "customerloads", label: "Track My Deliveries" },
+		{ id: "invoices", label: "Invoices" },
 	];
 
 	const driverItems = [
