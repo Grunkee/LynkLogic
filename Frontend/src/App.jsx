@@ -7,6 +7,7 @@ import Sidebar from "./Sidebar";
 import DriverSidebar from "./truckersidebar.jsx";
 import Login from "./pages/Login.jsx";
 import Hours from "./pages/hours.jsx";
+import MakeReport from "./makereport.jsx"
 import CustomerLoads from "./CustomerLoads";
 import "./App.css";
 
@@ -34,6 +35,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
       navigate("/hours");
     } else if (page === "customerloads") {
       navigate("/customerloads");
+    } else if (page == "reports") {
+      navigate("/reports")
     } else {
       navigate("/dashboard");
     }
@@ -59,6 +62,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
         );
       case "customerloads":
         return <CustomerLoads />;
+      case "reports":
+        return <MakeReport/>;
       default:
         return <LoadTable />;
     }
@@ -81,7 +86,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
         </div>
       </header>
       <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
-        {currentPage === "hours" ? (
+        {currentPage === "hours" || currentPage == "reports" ? (
           <DriverSidebar currentPage={currentPage} onNavigate={handleNavigate} />
         ) : (
           <Sidebar currentPage={currentPage} onNavigate={handleNavigate} />
