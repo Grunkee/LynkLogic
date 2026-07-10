@@ -3,20 +3,21 @@ import { supabase } from './supabase_client'
 import { useState, useEffect } from 'react'
 
 export default function Sidebar({ currentPage, onNavigate, role }) {
+	
 	const coreDashboardItems = [
-		{ id: "loadassignments", label: "Load Assignments" },
-		{ id: "Compliance", label: "Compliance Records", roles: ["dispatcher"] },
-		{ id: "shipments", label: "Shipments" },
-		{ id: "customerloads", label: "Track My Deliveries" },
+		{ id: "loadassignments", label: "Load Assignments", roles: ["dispatcher"] },
+		{ id: "Compliance", label: "Compliance Records", roles: ["manager"] },
+		{ id: "shipments", label: "Shipments", roles: ["manager"] },
+		{ id: "customerloads", label: "Track My Deliveries", roles: ["customer"] },
 	];
+
+	const mainItems = role === "driver" ? driverItems : coreDashboardItems.filter(item => item.roles.includes(role))
 
 	const driverItems = [
 		{ id: "hours", label: "Schedule" },
 		{ id: "messages", label: "Messages", placeholder: true },
 		{ id: "reports", label: "Make a Report" },
 	];
-
-	const mainItems = role === "driver" ? driverItems : coreDashboardItems;
 
 	const bottomItems = [
 		{ id: "settings", label: "Settings" },
