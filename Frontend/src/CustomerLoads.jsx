@@ -71,11 +71,11 @@ function CustomerLoads() {
       <table style={{ width: "100%", background: COLORS.white, borderCollapse: "collapse", marginTop: "16px" }}>
         <thead>
           <tr style={{ background: COLORS.navy, color: COLORS.white }}>
-            <th style={{ padding: "12px", textAlign: "left" }}>Load ID</th>
-            <th style={{ padding: "12px", textAlign: "left" }}>Pickup</th>
-            <th style={{ padding: "12px", textAlign: "left" }}>Delivery</th>
-            <th style={{ padding: "12px", textAlign: "left" }}>ETA</th>
-            <th style={{ padding: "12px", textAlign: "left" }}>Status</th>
+            <th style={{ padding: "12px", textAlign: "center" }}>Load ID</th>
+            <th style={{ padding: "12px", textAlign: "center" }}>Pickup</th>
+            <th style={{ padding: "12px", textAlign: "center" }}>Delivery</th>
+            <th style={{ padding: "12px", textAlign: "center" }}>ETA</th>
+            <th style={{ padding: "12px", textAlign: "center" }}>Status</th>
           </tr>
         </thead>
 
