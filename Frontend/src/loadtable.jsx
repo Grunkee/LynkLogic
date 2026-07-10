@@ -255,7 +255,7 @@ function markNotificationAsRead(notificationId) {
 
           <table style={{ width: "100%", background: "white" }}>
             <thead>
-              <tr>
+              <tr style={{ background: "#0B3C5D", color: "white" }}>
                 {[
                   { label: "Load ID", key: "id" },
                   { label: "Driver", key: "driverName" },
