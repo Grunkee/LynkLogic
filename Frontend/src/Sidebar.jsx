@@ -1,3 +1,6 @@
+import { useNavigate } from 'react-router-dom'
+import { supabase } from './supabase_client'
+
 export default function Sidebar({ currentPage, onNavigate }) {
   const mainItems = [
     { id: "loadassignments", label: "Load Assignments" },
@@ -10,6 +13,13 @@ export default function Sidebar({ currentPage, onNavigate }) {
     { id: "help", label: "Help" },
     { id: "logout", label: "Logout" },
   ];
+
+  const navigate = useNavigate()
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    navigate("/login")
+  }
 
   return (
     <aside
@@ -58,9 +68,10 @@ export default function Sidebar({ currentPage, onNavigate }) {
 
       <div style={{ padding: "20px 16px 24px", borderTop: "1px solid rgba(255,255,255,0.12)", display: "flex", flexDirection: "column", gap: "14px" }}>
         {bottomItems.map((item) => (
-          <button
+            <button
             key={item.id}
             type="button"
+            onClick={item.id === "logout" ? handleLogout : undefined}
             style={{
               display: "flex",
               alignItems: "center",
