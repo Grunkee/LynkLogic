@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-route
 import LoadTable from "./loadtable";
 import { DATA_TEST } from "./loadhours.jsx";
 import LoadShipments from "./loadshipments";
+import Manager from "./pages/Manager.jsx";
 import Sidebar from "./Sidebar";
 import Login from "./pages/Login.jsx";
 import Hours from "./pages/hours.jsx";
@@ -69,6 +70,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
 				return <MakeReport />;
 			case "compliance":
 				return <Compliance />;
+			case "manager":
+				return <Manager />;
 			default:
 				return <LoadTable />;
 		}
@@ -116,6 +119,7 @@ function App() {
 				<Route path="/shipments" element={<Dashboard initialPage="shipments" />} />
 				<Route path="/hours" element={<Dashboard key="hours" initialPage="hours" />} />
 				<Route path="/compliance" element={<Dashboard initialPage="compliance" />} />
+				<Route path="/manager" element={<Dashboard initialPage="manager" />} />
 				<Route path="/customerloads" element={<Dashboard initialPage="customerloads" />} />
 				<Route path="/customer" element={<Dashboard initialPage="customer" />} />
 				<Route path="/reports" element={<Dashboard key="reports" initialPage="reports" />} />
