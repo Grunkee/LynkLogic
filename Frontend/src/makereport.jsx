@@ -130,15 +130,15 @@ export default function MakeReport() {
                 <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
                     <thead>
                         <tr style={{ background: "#0B3C5D", borderBottom: "1px solid #cbd5e1" }}>
-                            <th style={{ padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>ID</th>
-                            <th style={{ padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>Report Date</th>
-                            <th style={{ padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>Type of Report</th>
-                            <th style={{ padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>Status</th>
+                            <th style={{ position: "sticky", top: 0, background: "#0B3C5D", zIndex: 1, padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>ID</th>
+                            <th style={{ position: "sticky", top: 0, background: "#0B3C5D", zIndex: 1, padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>Report Date</th>
+                            <th style={{ position: "sticky", top: 0, background: "#0B3C5D", zIndex: 1, padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>Type of Report</th>
+                            <th style={{ position: "sticky", top: 0, background: "#0B3C5D", zIndex: 1, padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {reportHistory.map((report) => (
-                            <tr key={report.id} style={{ borderBottom: "1px solid #f1f5f9" }}>
+                        {reportHistory.map((report, index) => (
+                            <tr key={report.id ? `${report.id}-${index}` : index} style={{ borderBottom: "1px solid #f1f5f9" }}>
                                 <td style={{ padding: "14px 16px", color: "#0B3C5D", fontWeight: "bold" }}>{report.id}</td>
                                 <td style={{ padding: "14px 16px", color: "#334155" }}>{report.date}</td>
                                 <td style={{ padding: "14px 16px", color: "#334155" }}>{report.type}</td>

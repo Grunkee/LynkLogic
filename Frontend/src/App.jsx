@@ -69,6 +69,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
 				return <MakeReport />;
 			case "compliance":
 				return <Compliance />;
+
 			default:
 				return <LoadTable />;
 		}
@@ -119,6 +120,8 @@ function App() {
 				<Route path="/customerloads" element={<Dashboard initialPage="customerloads" />} />
 				<Route path="/customer" element={<Dashboard initialPage="customer" />} />
 				<Route path="/reports" element={<Dashboard key="reports" initialPage="reports" />} />
+				
+				
 			</Routes>
 		</BrowserRouter>
 	);

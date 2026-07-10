@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ShieldCheck, AlertTriangle, XCircle, Truck, Search, ChevronUp, ChevronDown } from "lucide-react";
+import { ShieldCheck, AlertTriangle, XCircle, Truck, Search, ChevronUp, ChevronDown, Download } from "lucide-react";
 import { supabase } from "./supabase_client";
 
 const today = new Date();
@@ -25,7 +25,9 @@ const STATUS_META = {
 	expired: { label: "Expired", color: COLORS.red, bg: COLORS.redBg, Icon: XCircle },
 };
 
-async function fetchDrivers() {
+
+
+async function fetchComplianceData() {
 	const { data: driverRows, error: driverErr } = await supabase
 		.from("drivers")
 		.select("driver_id, first_name, last_name, license_number, email, phone, status");
@@ -33,14 +35,116 @@ async function fetchDrivers() {
 
 	const { data: itemRows, error: itemErr } = await supabase
 		.from("compliance_items")
-		.select("id, driver_id, label, expires, kind");
+		.select("id, driver_id, label, expires, kind, history");
 	if (itemErr) throw itemErr;
 
-	return driverRows.map((d) => ({
-		...d,
-		name: `${d.first_name} ${d.last_name}`,
-		items: (itemRows || []).filter((i) => String(i.driver_id) === String(d.driver_id)),
+	const { data: truckRows, error: truckErr } = await supabase
+		.from("trucks")
+		.select("truck_id, driver_id, model_name, vehicle_insurance_number, fleet_num");
+	if (truckErr) throw truckErr;
+
+	const { data: truckItemRows, error: truckItemErr } = await supabase
+		.from("compliance_items_trucks")
+		.select("id, truck_id, label, expires, history");
+	if (truckItemErr) throw truckItemErr;
+
+	const drivers = driverRows
+		.filter(d => d.status !== 'Vehicle')
+		.map((d) => ({
+			...d,
+			name: `${d.first_name} ${d.last_name || ''}`.trim(),
+			items: itemRows.filter((i) => i.kind !== 'History' && String(i.driver_id) === String(d.driver_id)),
+		}));
+
+	const vehicles = truckRows.map(t => ({
+		driver_id: t.truck_id, // Map for UI compatibility
+		truck_id: t.truck_id,
+		name: t.model_name,
+		type: "Vehicle",
+		license_number: "VIN-" + t.vehicle_insurance_number,
+		email: "Fleet #" + t.fleet_num,
+		items: truckItemRows
+			.filter(i => String(i.truck_id) === String(t.truck_id))
+			.filter(i => !i.label.startsWith('{'))
+			.map(i => ({
+				...i,
+				kind: i.label.toLowerCase().includes('inspection') ? 'INSPECTION' : 'REGISTRATION'
+			}))
 	}));
+
+	const allHistory = [];
+
+	itemRows.forEach(i => {
+		if (i.kind === 'History') {
+			try {
+				const parsed = JSON.parse(i.label);
+				allHistory.push({
+					id: i.id,
+					entityId: i.driver_id,
+					action: parsed.action,
+					oldDate: parsed.oldDate,
+					newDate: parsed.newDate,
+					timestamp: parsed.timestamp,
+					user: parsed.user
+				});
+			} catch {}
+		} else if (i.history) {
+			let hist = i.history;
+			if (typeof hist === 'string') {
+				try { hist = JSON.parse(hist); } catch {}
+			}
+			if (Array.isArray(hist)) {
+				hist.forEach((h, idx) => {
+					let parsedH = h;
+					if (typeof h === 'string') {
+						try { parsedH = JSON.parse(h); } catch {}
+					}
+					allHistory.push({
+						id: `${i.id}-h-${idx}`,
+						entityId: i.driver_id,
+						...parsedH
+					});
+				});
+			}
+		}
+	});
+
+	truckItemRows.forEach(i => {
+		if (i.label.startsWith('{')) {
+			try {
+				const parsed = JSON.parse(i.label);
+				allHistory.push({
+					id: i.id,
+					entityId: i.truck_id,
+					action: parsed.action,
+					oldDate: parsed.oldDate,
+					newDate: parsed.newDate,
+					timestamp: parsed.timestamp,
+					user: parsed.user
+				});
+			} catch {}
+		} else if (i.history) {
+			let hist = i.history;
+			if (typeof hist === 'string') {
+				try { hist = JSON.parse(hist); } catch {}
+			}
+			if (Array.isArray(hist)) {
+				hist.forEach((h, idx) => {
+					let parsedH = h;
+					if (typeof h === 'string') {
+						try { parsedH = JSON.parse(h); } catch {}
+					}
+					allHistory.push({
+						id: `${i.id}-h-${idx}`,
+						entityId: i.truck_id,
+						...parsedH
+					});
+				});
+			}
+		}
+	});
+
+	return { drivers, vehicles, history: allHistory.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)) };
 }
 
 function daysUntil(dateStr) {
@@ -73,9 +177,51 @@ function daysLabel(dateStr) {
 	return `Expires in ${d}d`;
 }
 
-function ComplianceItem({ item }) {
+function HistoryModal({ entityId, history, onClose }) {
+	const entityHistory = history.filter(h => String(h.entityId) === String(entityId)).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+	return (
+		<div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}>
+			<div style={{ background: COLORS.white, borderRadius: "8px", width: "500px", maxWidth: "90%", maxHeight: "80vh", display: "flex", flexDirection: "column" }}>
+				<div style={{ padding: "16px 20px", borderBottom: `1px solid ${COLORS.border}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+					<div style={{ fontSize: "16px", fontWeight: 600, color: COLORS.dark }}>Audit Log</div>
+					<button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.muted }}><XCircle size={20} /></button>
+				</div>
+				<div style={{ padding: "20px", overflowY: "auto", flex: 1 }}>
+					{entityHistory.length === 0 ? (
+						<div style={{ color: COLORS.muted, textAlign: "center", padding: "20px" }}>No history found for this entity.</div>
+					) : (
+						<div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+							{entityHistory.map((h, i) => (
+								<div key={i} style={{ fontSize: "13px", borderBottom: `1px solid ${COLORS.border}`, paddingBottom: "12px" }}>
+									<div style={{ fontWeight: 600, color: COLORS.navy }}>{h.action}</div>
+									<div style={{ color: COLORS.muted, marginTop: "4px" }}>
+										Changed from <b>{h.oldDate}</b> to <b>{h.newDate}</b>
+									</div>
+									<div style={{ display: "flex", justifyContent: "space-between", color: COLORS.muted, marginTop: "8px", fontSize: "12px" }}>
+										<span>By: {h.user}</span>
+										<span>{new Date(h.timestamp).toLocaleString()}</span>
+									</div>
+								</div>
+							))}
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function ComplianceItem({ item, entityId, onUpdate }) {
+	const [isEditing, setIsEditing] = useState(false);
+	const [newDate, setNewDate] = useState(item.expires ? item.expires.split('T')[0] : '');
 	const status = itemStatus(item.expires);
 	const meta = STATUS_META[status];
+
+	const handleSave = () => {
+		if (onUpdate) onUpdate(entityId, item.id, newDate);
+		setIsEditing(false);
+	};
+
 	return (
 		<div
 			style={{
@@ -93,14 +239,24 @@ function ComplianceItem({ item }) {
 				<span style={{ fontSize: "11px", fontWeight: 600, color: COLORS.muted, textTransform: "uppercase", letterSpacing: "0.5px" }}>
 					{item.kind}
 				</span>
-				<div style={{ width: "8px", height: "8px", borderRadius: "50%", background: meta.color }} />
+				<div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+					<button onClick={() => setIsEditing(!isEditing)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "11px", color: COLORS.navy, padding: 0 }}>Edit</button>
+					<div style={{ width: "8px", height: "8px", borderRadius: "50%", background: meta.color }} />
+				</div>
 			</div>
 			<div style={{ fontSize: "14px", fontWeight: 500, color: COLORS.dark, marginBottom: "4px" }}>
 				{item.label}
 			</div>
-			<div style={{ fontSize: "12px", color: meta.color, fontWeight: 500 }}>
-				{daysLabel(item.expires)} &middot; {fmtDate(item.expires)}
-			</div>
+			{isEditing ? (
+				<div style={{ display: "flex", gap: "4px", marginTop: "8px" }}>
+					<input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} style={{ flex: 1, padding: "4px", fontSize: "12px", border: `1px solid ${COLORS.border}`, borderRadius: "4px", outline: "none" }} />
+					<button onClick={handleSave} style={{ background: COLORS.navy, color: "white", border: "none", borderRadius: "4px", padding: "4px 8px", fontSize: "12px", cursor: "pointer" }}>Save</button>
+				</div>
+			) : (
+				<div style={{ fontSize: "12px", color: meta.color, fontWeight: 500 }}>
+					{daysLabel(item.expires)} &middot; {fmtDate(item.expires)}
+				</div>
+			)}
 		</div>
 	);
 }
@@ -115,7 +271,7 @@ function StatusDot({ color, count }) {
 	);
 }
 
-function DriverCard({ driver }) {
+function DriverCard({ driver, onUpdate, onViewHistory }) {
 	const [open, setOpen] = useState(false);
 	const status = driverStatus(driver);
 	const meta = STATUS_META[status];
@@ -188,16 +344,23 @@ function DriverCard({ driver }) {
 				<div
 					style={{
 						display: "flex",
-						flexWrap: "wrap",
+						flexDirection: "column",
 						gap: "10px",
 						padding: "0 20px 20px",
 						borderTop: `1px solid ${COLORS.border}`,
 						paddingTop: "14px",
 					}}
 				>
-					{driver.items.map((item, idx) => (
-						<ComplianceItem key={idx} item={item} />
-					))}
+					<div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+						{driver.items.map((item, idx) => (
+							<ComplianceItem key={idx} item={item} entityId={driver.driver_id} onUpdate={onUpdate} />
+						))}
+					</div>
+					<div style={{ display: "flex", justifyContent: "flex-end", marginTop: "4px" }}>
+						<button onClick={() => onViewHistory(driver.driver_id)} style={{ background: "none", border: "none", padding: 0, fontSize: "12px", cursor: "pointer", color: COLORS.muted, textDecoration: "underline" }}>
+							View Audit Log
+						</button>
+					</div>
 				</div>
 			)}
 		</div>
@@ -205,20 +368,93 @@ function DriverCard({ driver }) {
 }
 
 export default function Compliance() {
+	const [activeTab, setActiveTab] = useState("drivers");
 	const [query, setQuery] = useState("");
 	const [filter, setFilter] = useState("all");
 	const [drivers, setDrivers] = useState([]);
+	const [vehicles, setVehicles] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [history, setHistory] = useState([]);
+	const [viewingHistoryFor, setViewingHistoryFor] = useState(null);
 
 	useEffect(() => {
-		fetchDrivers()
-			.then(setDrivers)
+		fetchComplianceData()
+			.then((data) => {
+				setDrivers(data.drivers);
+				setVehicles(data.vehicles);
+				setHistory(data.history);
+			})
 			.catch((err) => setError(err.message))
 			.finally(() => setLoading(false));
 	}, []);
 
-	const withStatus = drivers.map((d) => ({ ...d, status: driverStatus(d) }));
+	const updateItem = async (entityId, itemId, newDate) => {
+		let oldDate = "";
+		let label = "";
+		let existingHistory = [];
+		if (activeTab === "drivers") {
+			const d = drivers.find(d => String(d.driver_id) === String(entityId));
+			const i = d?.items.find(i => i.id === itemId);
+			if (i) {
+				oldDate = i.expires;
+				label = i.label;
+				let hist = i.history || [];
+				if (typeof hist === 'string') { try { hist = JSON.parse(hist); } catch {} }
+				existingHistory = Array.isArray(hist) ? hist : [];
+			}
+		} else {
+			const v = vehicles.find(v => String(v.driver_id) === String(entityId));
+			const i = v?.items.find(i => i.id === itemId);
+			if (i) {
+				oldDate = i.expires;
+				label = i.label;
+				let hist = i.history || [];
+				if (typeof hist === 'string') { try { hist = JSON.parse(hist); } catch {} }
+				existingHistory = Array.isArray(hist) ? hist : [];
+			}
+		}
+
+		const oldDateStr = oldDate ? oldDate.split('T')[0] : null;
+
+		const newHistoryObj = {
+			action: `Updated ${label} expiration`,
+			oldDate: oldDateStr || "None",
+			newDate,
+			timestamp: new Date().toISOString(),
+			user: "Manager"
+		};
+		const newHistoryArray = [...existingHistory, newHistoryObj];
+
+		const newHistoryEvent = {
+			id: Date.now(),
+			entityId,
+			...newHistoryObj
+		};
+		setHistory(prev => [newHistoryEvent, ...prev]);
+
+		if (activeTab === "drivers") {
+			setDrivers(prev => prev.map(d => {
+				if (String(d.driver_id) !== String(entityId)) return d;
+				return { ...d, items: d.items.map(i => i.id === itemId ? { ...i, expires: newDate, history: newHistoryArray } : i) };
+			}));
+		} else {
+			setVehicles(prev => prev.map(v => {
+				if (String(v.driver_id) !== String(entityId)) return v;
+				return { ...v, items: v.items.map(i => i.id === itemId ? { ...i, expires: newDate, history: newHistoryArray } : i) };
+			}));
+		}
+
+		// Save to Supabase
+		if (activeTab === "drivers") {
+			await supabase.from("compliance_items").update({ expires: newDate, history: newHistoryArray }).eq("id", itemId);
+		} else {
+			await supabase.from("compliance_items_trucks").update({ expires: newDate, history: newHistoryArray }).eq("id", itemId);
+		}
+	};
+
+	const currentList = activeTab === "drivers" ? drivers : vehicles;
+	const withStatus = currentList.map((d) => ({ ...d, status: driverStatus(d), type: d.type || "Driver" }));
 	const counts = {
 		valid: withStatus.filter((d) => d.status === "valid").length,
 		expiring: withStatus.filter((d) => d.status === "expiring").length,
@@ -246,6 +482,27 @@ export default function Compliance() {
 		{ key: "expiring", label: "Expiring" },
 		{ key: "expired", label: "Expired" },
 	];
+
+	const handleExport = () => {
+		const headers = ["Name", "Type", "License Number", "Email", "Status"];
+		const rows = filtered.map(d => [
+			`"${d.name || ''}"`,
+			`"${d.type || ''}"`,
+			`"${d.license_number || ''}"`,
+			`"${d.email || ''}"`,
+			`"${d.status || ''}"`
+		].join(","));
+		
+		const csvContent = [headers.join(","), ...rows].join("\n");
+		const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement("a");
+		link.setAttribute("href", url);
+		link.setAttribute("download", `${activeTab}_compliance_report_${new Date().toISOString().split('T')[0]}.csv`);
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	};
 
 	return (
 		<div style={{ background: COLORS.bg, minHeight: "100vh", padding: "24px" }}>
@@ -341,6 +598,21 @@ export default function Compliance() {
 					</div>
 
 					{/* Search and Filter */}
+					<div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+						<button
+							onClick={() => setActiveTab("drivers")}
+							style={{ padding: "8px 16px", borderRadius: "8px", background: activeTab === "drivers" ? COLORS.navy : COLORS.white, color: activeTab === "drivers" ? COLORS.white : COLORS.muted, cursor: "pointer", fontWeight: 600, flex: 1, border: `1px solid ${activeTab === "drivers" ? COLORS.navy : COLORS.border}` }}
+						>
+							Drivers
+						</button>
+						<button
+							onClick={() => setActiveTab("vehicles")}
+							style={{ padding: "8px 16px", borderRadius: "8px", background: activeTab === "vehicles" ? COLORS.navy : COLORS.white, color: activeTab === "vehicles" ? COLORS.white : COLORS.muted, cursor: "pointer", fontWeight: 600, flex: 1, border: `1px solid ${activeTab === "vehicles" ? COLORS.navy : COLORS.border}` }}
+						>
+							Vehicles
+						</button>
+					</div>
+
 					<div
 						style={{
 							background: COLORS.white,
@@ -348,54 +620,60 @@ export default function Compliance() {
 							display: "flex",
 							gap: "12px",
 							alignItems: "center",
+							justifyContent: "space-between",
 							borderRadius: "8px",
 							marginBottom: "16px",
 							border: `1px solid ${COLORS.border}`,
 							flexWrap: "wrap",
 						}}
 					>
-						<div style={{ display: "flex", alignItems: "center", gap: "8px", flex: "1 1 200px" }}>
-							<Search size={16} color={COLORS.muted} />
-							<input
-								value={query}
-								onChange={(e) => setQuery(e.target.value)}
-								placeholder="Search driver or vehicle..."
-								style={{
-									border: "none",
-									outline: "none",
-									background: "transparent",
-									flex: 1,
-									fontSize: "14px",
-									color: COLORS.dark,
-								}}
-							/>
-						</div>
-						<div style={{ display: "flex", gap: "6px" }}>
-							{filterButtons.map((f) => (
-								<button
-									key={f.key}
-									onClick={() => setFilter(f.key)}
+						<div style={{ display: "flex", gap: "12px", alignItems: "center", flex: "1 1 300px" }}>
+							<div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>
+								<Search size={16} color={COLORS.muted} />
+								<input
+									value={query}
+									onChange={(e) => setQuery(e.target.value)}
+									placeholder={`Search ${activeTab}...`}
 									style={{
-										padding: "6px 14px",
-										fontSize: "12px",
-										fontWeight: 500,
-										borderRadius: "10px",
-										cursor: "pointer",
-										border: filter === f.key ? "none" : `1px solid ${COLORS.border}`,
-										background: filter === f.key ? COLORS.navy : COLORS.bg,
-										color: filter === f.key ? COLORS.white : COLORS.muted,
+										border: "none",
+										outline: "none",
+										background: "transparent",
+										flex: 1,
+										fontSize: "14px",
+										color: COLORS.dark,
 									}}
-								>
-									{f.label}
-								</button>
-							))}
+								/>
+							</div>
+							<div style={{ display: "flex", gap: "6px" }}>
+								{filterButtons.map((f) => (
+									<button
+										key={f.key}
+										onClick={() => setFilter(f.key)}
+										style={{
+											padding: "6px 14px",
+											fontSize: "12px",
+											fontWeight: 500,
+											borderRadius: "10px",
+											cursor: "pointer",
+											border: filter === f.key ? "none" : `1px solid ${COLORS.border}`,
+											background: filter === f.key ? COLORS.navy : COLORS.bg,
+											color: filter === f.key ? COLORS.white : COLORS.muted,
+										}}
+									>
+										{f.label}
+									</button>
+								))}
+							</div>
 						</div>
+						<button onClick={handleExport} style={{ display: "flex", alignItems: "center", gap: "6px", background: COLORS.green, color: "white", border: "none", borderRadius: "8px", padding: "8px 16px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>
+							<Download size={16} /> Export Report
+						</button>
 					</div>
 
 					{/* Driver Cards */}
 					<div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
 						{filtered.map((d) => (
-							<DriverCard key={d.driver_id} driver={d} />
+							<DriverCard key={d.driver_id} driver={d} onUpdate={updateItem} onViewHistory={setViewingHistoryFor} />
 						))}
 						{filtered.length === 0 && (
 							<div
@@ -415,6 +693,9 @@ export default function Compliance() {
 					</div>
 				</>}
 			</div>
+			{viewingHistoryFor && (
+				<HistoryModal entityId={viewingHistoryFor} history={history} onClose={() => setViewingHistoryFor(null)} />
+			)}
 		</div>
 	);
 }
