@@ -10,6 +10,13 @@ const COLORS = {
   white: "#FFFFFF",
 }
 
+function getStatusStyle(status) {
+  if (status === "In Transit") return { backgroundColor: "#5B8DB8", color: "#fff" }
+  if (status === "Delivered") return { backgroundColor: "#059669", color: "#fff" }
+  if (status === "Pending") return { backgroundColor: "#D97706", color: "#fff" }
+  return { backgroundColor: "#757575", color: "#fff" }
+}
+
 // formats the eta from the database into a readable date and time
 function formatETA(eta) {
   if (!eta) return "Not set"
@@ -39,7 +46,7 @@ function CustomerLoads() {
   }, [])
 
   return (
-    <div style={{ fontFamily: "Arial", background: "#f5f5f5", minHeight: "100vh", padding: "24px" }}>
+<div style={{ background: "#f5f5f5", minHeight: "100vh", padding: "24px" }}>
 
       {/* page header */}
       <div style={{
@@ -71,23 +78,32 @@ function CustomerLoads() {
       <table style={{ width: "100%", background: COLORS.white, borderCollapse: "collapse", marginTop: "16px" }}>
         <thead>
           <tr style={{ background: COLORS.navy, color: COLORS.white }}>
-            <th style={{ padding: "12px", textAlign: "center" }}>Load ID</th>
-            <th style={{ padding: "12px", textAlign: "center" }}>Pickup</th>
-            <th style={{ padding: "12px", textAlign: "center" }}>Delivery</th>
-            <th style={{ padding: "12px", textAlign: "center" }}>ETA</th>
-            <th style={{ padding: "12px", textAlign: "center" }}>Status</th>
+            <th style={{ padding: "12px 16px", textAlign: "left", whiteSpace: "nowrap" }}>Load ID</th>
+            <th style={{ padding: "12px 16px", textAlign: "left", whiteSpace: "nowrap" }}>Pickup</th>
+            <th style={{ padding: "12px 16px", textAlign: "left", whiteSpace: "nowrap" }}>Delivery</th>
+            <th style={{ padding: "12px 16px", textAlign: "left", whiteSpace: "nowrap" }}>ETA</th>
+            <th style={{ padding: "12px 16px", textAlign: "left", whiteSpace: "nowrap" }}>Status</th>
           </tr>
         </thead>
 
         <tbody>
           {loads.map((load) => (
             <tr key={load.load_id} style={{ borderBottom: "1px solid #ddd" }}>
-              <td style={{ padding: "12px" }}>LD{load.load_id}</td>
-              <td style={{ padding: "12px" }}>{load.pickup_location}</td>
-              <td style={{ padding: "12px" }}>{load.delivery_location}</td>
-              <td style={{ padding: "12px" }}>{formatETA(load.eta)}</td>
-              <td style={{ padding: "12px" }}>{load.status}</td>
-            </tr>
+              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle" }}>LD{load.load_id}</td>
+              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle" }}>{load.pickup_location}</td>
+              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle" }}>{load.delivery_location}</td>
+              <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle" }}>{formatETA(load.eta)}</td>     
+              <td style={{ padding: "12px 16px", fontSize: "14px", verticalAlign: "middle" }}>
+  
+  <span style={{
+    ...getStatusStyle(load.status),
+    padding: "4px 10px",
+    borderRadius: "10px",
+    fontSize: "13px"
+  }}>
+    {load.status}
+  </span>
+</td>            </tr>
           ))}
         </tbody>
       </table>
