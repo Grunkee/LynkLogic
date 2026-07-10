@@ -21,14 +21,14 @@ export default function MakeReport() {
     }
 
     return (
-        <div style={{ padding: "24px", maxWidth: "500px", margin: "0 auto", fontFamily: "Arial" }}>
+        <div style={{ padding: "140px 24px 24px 24px", maxWidth: "500px", margin: "0 auto", fontFamily: "Arial" }}>
             <h2 style={{ color: "#0B3C5D", marginBottom: "8px" }}>Submit a Report</h2>
             <p style={{ color: "#64748b", marginBottom: "24px" }}>Fill out this form to notify maintenance as soon as possible.</p>
 
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <label style={{ fontWeight: "bold", color: "#334155" }}>Vehicle ID *</label>
+                    <label style={{ fontWeight: "bold", color: "#334155" }}>Vehicle ID</label>
                     <input 
                         type="text"
                         placeholder="e.g., ABC-12345"
@@ -80,14 +80,14 @@ export default function MakeReport() {
                     </div>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <label style={{ fontWeight: "bold", color: "#334155" }}>Issue Description *</label>
+                    <label style={{ fontWeight: "bold", color: "#334155" }}>Issue Description</label>
                     <textarea 
                         rows="4"
                         placeholder="Provide details about the damage or maintenance needed..."
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         style={{
-                            padding: "12px", 
+                            padding: "40px", 
                             borderRadius: "8px", 
                             border: "1px solid #cbd5e1", 
                             background: "#ffffff",
