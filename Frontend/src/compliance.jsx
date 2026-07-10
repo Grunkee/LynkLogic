@@ -25,35 +25,7 @@ const STATUS_META = {
 	expired: { label: "Expired", color: COLORS.red, bg: COLORS.redBg, Icon: XCircle },
 };
 
-// Data fetching moved below mock data definitions for fallback access
 
-const MOCK_VEHICLES = [
-	{
-		driver_id: "V100",
-		type: "Vehicle",
-		name: "Freightliner Cascadia",
-		license_number: "VIN-12345",
-		email: "Fleet #1",
-		items: [
-			{ id: 'v1', kind: 'Inspection', label: 'Annual DOT Inspection', expires: '2026-08-15' },
-			{ id: 'v2', kind: 'Registration', label: 'State Registration', expires: '2026-07-20' },
-		]
-	},
-	{
-		driver_id: "V101",
-		type: "Vehicle",
-		name: "Volvo VNL",
-		license_number: "VIN-67890",
-		email: "Fleet #2",
-		items: [
-			{ id: 'v3', kind: 'Inspection', label: 'Annual DOT Inspection', expires: '2026-06-01' },
-		]
-	}
-];
-
-const MOCK_HISTORY = [
-	{ id: 1, entityId: "V100", action: "Updated Annual DOT Inspection expiration", oldDate: "2025-08-15", newDate: "2026-08-15", timestamp: "2026-07-09T14:22:00Z", user: "System" },
-];
 
 async function fetchComplianceData() {
 	const { data: driverRows, error: driverErr } = await supabase
@@ -63,8 +35,18 @@ async function fetchComplianceData() {
 
 	const { data: itemRows, error: itemErr } = await supabase
 		.from("compliance_items")
-		.select("id, driver_id, label, expires, kind");
+		.select("id, driver_id, label, expires, kind, history");
 	if (itemErr) throw itemErr;
+
+	const { data: truckRows, error: truckErr } = await supabase
+		.from("trucks")
+		.select("truck_id, driver_id, model_name, vehicle_insurance_number, fleet_num");
+	if (truckErr) throw truckErr;
+
+	const { data: truckItemRows, error: truckItemErr } = await supabase
+		.from("compliance_items_trucks")
+		.select("id, truck_id, label, expires, history");
+	if (truckItemErr) throw truckItemErr;
 
 	const drivers = driverRows
 		.filter(d => d.status !== 'Vehicle')
@@ -74,36 +56,95 @@ async function fetchComplianceData() {
 			items: itemRows.filter((i) => i.kind !== 'History' && String(i.driver_id) === String(d.driver_id)),
 		}));
 
-	const vehicles = driverRows
-		.filter(d => d.status === 'Vehicle')
-		.map(v => ({
-			...v,
-			name: v.first_name,
-			type: "Vehicle",
-			items: itemRows.filter((i) => i.kind !== 'History' && String(i.driver_id) === String(v.driver_id)),
-		}));
+	const vehicles = truckRows.map(t => ({
+		driver_id: t.truck_id, // Map for UI compatibility
+		truck_id: t.truck_id,
+		name: t.model_name,
+		type: "Vehicle",
+		license_number: "VIN-" + t.vehicle_insurance_number,
+		email: "Fleet #" + t.fleet_num,
+		items: truckItemRows
+			.filter(i => String(i.truck_id) === String(t.truck_id))
+			.filter(i => !i.label.startsWith('{'))
+			.map(i => ({
+				...i,
+				kind: i.label.toLowerCase().includes('inspection') ? 'INSPECTION' : 'REGISTRATION'
+			}))
+	}));
 
-	const history = itemRows
-		.filter(i => i.kind === 'History')
-		.map(h => {
+	const allHistory = [];
+
+	itemRows.forEach(i => {
+		if (i.kind === 'History') {
 			try {
-				const parsed = JSON.parse(h.label);
-				return {
-					id: h.id,
-					entityId: h.driver_id,
+				const parsed = JSON.parse(i.label);
+				allHistory.push({
+					id: i.id,
+					entityId: i.driver_id,
 					action: parsed.action,
 					oldDate: parsed.oldDate,
 					newDate: parsed.newDate,
 					timestamp: parsed.timestamp,
 					user: parsed.user
-				};
-			} catch {
-				return null;
+				});
+			} catch {}
+		} else if (i.history) {
+			let hist = i.history;
+			if (typeof hist === 'string') {
+				try { hist = JSON.parse(hist); } catch {}
 			}
-		})
-		.filter(Boolean);
+			if (Array.isArray(hist)) {
+				hist.forEach((h, idx) => {
+					let parsedH = h;
+					if (typeof h === 'string') {
+						try { parsedH = JSON.parse(h); } catch {}
+					}
+					allHistory.push({
+						id: `${i.id}-h-${idx}`,
+						entityId: i.driver_id,
+						...parsedH
+					});
+				});
+			}
+		}
+	});
 
-	return { drivers, vehicles, history: history.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)) };
+	truckItemRows.forEach(i => {
+		if (i.label.startsWith('{')) {
+			try {
+				const parsed = JSON.parse(i.label);
+				allHistory.push({
+					id: i.id,
+					entityId: i.truck_id,
+					action: parsed.action,
+					oldDate: parsed.oldDate,
+					newDate: parsed.newDate,
+					timestamp: parsed.timestamp,
+					user: parsed.user
+				});
+			} catch {}
+		} else if (i.history) {
+			let hist = i.history;
+			if (typeof hist === 'string') {
+				try { hist = JSON.parse(hist); } catch {}
+			}
+			if (Array.isArray(hist)) {
+				hist.forEach((h, idx) => {
+					let parsedH = h;
+					if (typeof h === 'string') {
+						try { parsedH = JSON.parse(h); } catch {}
+					}
+					allHistory.push({
+						id: `${i.id}-h-${idx}`,
+						entityId: i.truck_id,
+						...parsedH
+					});
+				});
+			}
+		}
+	});
+
+	return { drivers, vehicles, history: allHistory.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)) };
 }
 
 function daysUntil(dateStr) {
@@ -331,10 +372,10 @@ export default function Compliance() {
 	const [query, setQuery] = useState("");
 	const [filter, setFilter] = useState("all");
 	const [drivers, setDrivers] = useState([]);
-	const [vehicles, setVehicles] = useState(MOCK_VEHICLES);
+	const [vehicles, setVehicles] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
-	const [history, setHistory] = useState(MOCK_HISTORY);
+	const [history, setHistory] = useState([]);
 	const [viewingHistoryFor, setViewingHistoryFor] = useState(null);
 
 	useEffect(() => {
@@ -351,58 +392,65 @@ export default function Compliance() {
 	const updateItem = async (entityId, itemId, newDate) => {
 		let oldDate = "";
 		let label = "";
+		let existingHistory = [];
 		if (activeTab === "drivers") {
 			const d = drivers.find(d => String(d.driver_id) === String(entityId));
 			const i = d?.items.find(i => i.id === itemId);
-			if (i) { oldDate = i.expires; label = i.label; }
+			if (i) {
+				oldDate = i.expires;
+				label = i.label;
+				let hist = i.history || [];
+				if (typeof hist === 'string') { try { hist = JSON.parse(hist); } catch {} }
+				existingHistory = Array.isArray(hist) ? hist : [];
+			}
 		} else {
 			const v = vehicles.find(v => String(v.driver_id) === String(entityId));
 			const i = v?.items.find(i => i.id === itemId);
-			if (i) { oldDate = i.expires; label = i.label; }
+			if (i) {
+				oldDate = i.expires;
+				label = i.label;
+				let hist = i.history || [];
+				if (typeof hist === 'string') { try { hist = JSON.parse(hist); } catch {} }
+				existingHistory = Array.isArray(hist) ? hist : [];
+			}
 		}
 
 		const oldDateStr = oldDate ? oldDate.split('T')[0] : null;
 
-		const newHistoryEvent = {
-			id: Date.now(),
-			entityId,
+		const newHistoryObj = {
 			action: `Updated ${label} expiration`,
 			oldDate: oldDateStr || "None",
 			newDate,
 			timestamp: new Date().toISOString(),
 			user: "Manager"
 		};
+		const newHistoryArray = [...existingHistory, newHistoryObj];
+
+		const newHistoryEvent = {
+			id: Date.now(),
+			entityId,
+			...newHistoryObj
+		};
 		setHistory(prev => [newHistoryEvent, ...prev]);
 
 		if (activeTab === "drivers") {
 			setDrivers(prev => prev.map(d => {
 				if (String(d.driver_id) !== String(entityId)) return d;
-				return { ...d, items: d.items.map(i => i.id === itemId ? { ...i, expires: newDate } : i) };
+				return { ...d, items: d.items.map(i => i.id === itemId ? { ...i, expires: newDate, history: newHistoryArray } : i) };
 			}));
 		} else {
 			setVehicles(prev => prev.map(v => {
 				if (String(v.driver_id) !== String(entityId)) return v;
-				return { ...v, items: v.items.map(i => i.id === itemId ? { ...i, expires: newDate } : i) };
+				return { ...v, items: v.items.map(i => i.id === itemId ? { ...i, expires: newDate, history: newHistoryArray } : i) };
 			}));
 		}
 
 		// Save to Supabase
-		await supabase.from("compliance_items").update({ expires: newDate }).eq("id", itemId);
-		
-		const historyPayload = JSON.stringify({
-			action: `Updated ${label} expiration`,
-			oldDate: oldDateStr || "None",
-			newDate,
-			timestamp: new Date().toISOString(),
-			user: "Manager"
-		});
-
-		await supabase.from("compliance_items").insert([{
-			driver_id: parseInt(entityId, 10),
-			kind: "History",
-			label: historyPayload,
-			expires: "2099-12-31"
-		}]);
+		if (activeTab === "drivers") {
+			await supabase.from("compliance_items").update({ expires: newDate, history: newHistoryArray }).eq("id", itemId);
+		} else {
+			await supabase.from("compliance_items_trucks").update({ expires: newDate, history: newHistoryArray }).eq("id", itemId);
+		}
 	};
 
 	const currentList = activeTab === "drivers" ? drivers : vehicles;
