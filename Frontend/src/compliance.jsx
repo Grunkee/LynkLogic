@@ -25,23 +25,7 @@ const STATUS_META = {
 	expired: { label: "Expired", color: COLORS.red, bg: COLORS.redBg, Icon: XCircle },
 };
 
-async function fetchDrivers() {
-	const { data: driverRows, error: driverErr } = await supabase
-		.from("drivers")
-		.select("driver_id, first_name, last_name, license_number, email, phone, status");
-	if (driverErr) throw driverErr;
-
-	const { data: itemRows, error: itemErr } = await supabase
-		.from("compliance_items")
-		.select("id, driver_id, label, expires, kind");
-	if (itemErr) throw itemErr;
-
-	return driverRows.map((d) => ({
-		...d,
-		name: `${d.first_name} ${d.last_name}`,
-		items: (itemRows || []).filter((i) => String(i.driver_id) === String(d.driver_id)),
-	}));
-}
+// Data fetching moved below mock data definitions for fallback access
 
 const MOCK_VEHICLES = [
 	{
@@ -70,6 +54,57 @@ const MOCK_VEHICLES = [
 const MOCK_HISTORY = [
 	{ id: 1, entityId: "V100", action: "Updated Annual DOT Inspection expiration", oldDate: "2025-08-15", newDate: "2026-08-15", timestamp: "2026-07-09T14:22:00Z", user: "System" },
 ];
+
+async function fetchComplianceData() {
+	const { data: driverRows, error: driverErr } = await supabase
+		.from("drivers")
+		.select("driver_id, first_name, last_name, license_number, email, phone, status");
+	if (driverErr) throw driverErr;
+
+	const { data: itemRows, error: itemErr } = await supabase
+		.from("compliance_items")
+		.select("id, driver_id, label, expires, kind");
+	if (itemErr) throw itemErr;
+
+	const drivers = driverRows
+		.filter(d => d.status !== 'Vehicle')
+		.map((d) => ({
+			...d,
+			name: `${d.first_name} ${d.last_name || ''}`.trim(),
+			items: itemRows.filter((i) => i.kind !== 'History' && String(i.driver_id) === String(d.driver_id)),
+		}));
+
+	const vehicles = driverRows
+		.filter(d => d.status === 'Vehicle')
+		.map(v => ({
+			...v,
+			name: v.first_name,
+			type: "Vehicle",
+			items: itemRows.filter((i) => i.kind !== 'History' && String(i.driver_id) === String(v.driver_id)),
+		}));
+
+	const history = itemRows
+		.filter(i => i.kind === 'History')
+		.map(h => {
+			try {
+				const parsed = JSON.parse(h.label);
+				return {
+					id: h.id,
+					entityId: h.driver_id,
+					action: parsed.action,
+					oldDate: parsed.oldDate,
+					newDate: parsed.newDate,
+					timestamp: parsed.timestamp,
+					user: parsed.user
+				};
+			} catch {
+				return null;
+			}
+		})
+		.filter(Boolean);
+
+	return { drivers, vehicles, history: history.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)) };
+}
 
 function daysUntil(dateStr) {
 	const d = new Date(dateStr);
@@ -303,13 +338,17 @@ export default function Compliance() {
 	const [viewingHistoryFor, setViewingHistoryFor] = useState(null);
 
 	useEffect(() => {
-		fetchDrivers()
-			.then(setDrivers)
+		fetchComplianceData()
+			.then((data) => {
+				setDrivers(data.drivers);
+				setVehicles(data.vehicles);
+				setHistory(data.history);
+			})
 			.catch((err) => setError(err.message))
 			.finally(() => setLoading(false));
 	}, []);
 
-	const updateItem = (entityId, itemId, newDate) => {
+	const updateItem = async (entityId, itemId, newDate) => {
 		let oldDate = "";
 		let label = "";
 		if (activeTab === "drivers") {
@@ -322,11 +361,13 @@ export default function Compliance() {
 			if (i) { oldDate = i.expires; label = i.label; }
 		}
 
+		const oldDateStr = oldDate ? oldDate.split('T')[0] : null;
+
 		const newHistoryEvent = {
 			id: Date.now(),
 			entityId,
 			action: `Updated ${label} expiration`,
-			oldDate: oldDate ? oldDate.split('T')[0] : "None",
+			oldDate: oldDateStr || "None",
 			newDate,
 			timestamp: new Date().toISOString(),
 			user: "Manager"
@@ -344,6 +385,24 @@ export default function Compliance() {
 				return { ...v, items: v.items.map(i => i.id === itemId ? { ...i, expires: newDate } : i) };
 			}));
 		}
+
+		// Save to Supabase
+		await supabase.from("compliance_items").update({ expires: newDate }).eq("id", itemId);
+		
+		const historyPayload = JSON.stringify({
+			action: `Updated ${label} expiration`,
+			oldDate: oldDateStr || "None",
+			newDate,
+			timestamp: new Date().toISOString(),
+			user: "Manager"
+		});
+
+		await supabase.from("compliance_items").insert([{
+			driver_id: parseInt(entityId, 10),
+			kind: "History",
+			label: historyPayload,
+			expires: "2099-12-31"
+		}]);
 	};
 
 	const currentList = activeTab === "drivers" ? drivers : vehicles;
