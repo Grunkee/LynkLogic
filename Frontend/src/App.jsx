@@ -112,6 +112,7 @@ function App() {
         <Route path="/hours" element={<Dashboard key="hours" initialPage="hours" />} />
         <Route path="/customerloads" element={<Dashboard initialPage="customerloads" />} />
         <Route path="/customer" element={<Dashboard initialPage="customer" />} />
+        <Route path="/reports" element={<Dashboard key="reports" initialPage="reports" />} />
       </Routes>
     </BrowserRouter>
   );
