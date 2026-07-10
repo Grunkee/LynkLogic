@@ -4,6 +4,12 @@ import { useState, useEffect } from 'react'
 
 export default function Sidebar({ currentPage, onNavigate, role }) {
 	
+	const driverItems = [
+		{ id: "hours", label: "Schedule" },
+		{ id: "messages", label: "Messages", placeholder: true },
+		{ id: "reports", label: "Make a Report" },
+	];
+
 	const coreDashboardItems = [
 		{ id: "loadassignments", label: "Load Assignments", roles: ["dispatcher"] },
 		{ id: "Compliance", label: "Compliance Records", roles: ["manager"] },
@@ -12,12 +18,6 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 	];
 
 	const mainItems = role === "driver" ? driverItems : coreDashboardItems.filter(item => item.roles.includes(role))
-
-	const driverItems = [
-		{ id: "hours", label: "Schedule" },
-		{ id: "messages", label: "Messages", placeholder: true },
-		{ id: "reports", label: "Make a Report" },
-	];
 
 	const bottomItems = [
 		{ id: "settings", label: "Settings" },
