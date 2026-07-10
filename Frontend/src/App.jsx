@@ -105,6 +105,7 @@ function App() {
         <Route path="/shipments" element={<Dashboard initialPage="shipments" />} />
         <Route path="/hours" element={<Dashboard key="hours" initialPage="hours" />} />
         <Route path="/customerloads" element={<Dashboard initialPage="customerloads" />} />
+        <Route path="/customer" element={<Dashboard initialPage="customer" />} />
       </Routes>
     </BrowserRouter>
   );
