@@ -50,23 +50,22 @@ function CustomerLoads() {
         justifyContent: "space-between",
         alignItems: "center"
       }}>
-        <h2>Track My Deliveries</h2>
+      
+      <h2>Track My Deliveries</h2>
+        <button
+          onClick={() => setShowHistory(true)}
+          style={{
+            background: COLORS.red,
+            color: COLORS.white,
+            padding: "10px 16px",
+            border: "none",
+            cursor: "pointer",
+            borderRadius: "4px"
+          }}
+        >
+          Delivery History
+        </button>
       </div>
-
-      <button
-        onClick={() => setShowHistory(true)}
-        style={{
-          background: COLORS.red,
-          color: COLORS.white,
-          padding: "10px 16px",
-          border: "none",
-          cursor: "pointer",
-          borderRadius: "4px"
-        }
-      }
-    >
-    Delivery History
-    </button>
 
       {/* table */}
       <table style={{ width: "100%", background: COLORS.white, borderCollapse: "collapse", marginTop: "16px" }}>
