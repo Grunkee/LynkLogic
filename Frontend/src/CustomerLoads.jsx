@@ -1,6 +1,7 @@
-// import react + supabase
+// import react + supabase + past deliveries
 import React, { useState, useEffect } from 'react'
 import { supabase } from './supabase_client'
+import PastDeliveries from './loadhistory'
 
 // brand colors
 const COLORS = {
@@ -21,6 +22,9 @@ function CustomerLoads() {
 
   // stores the loads from the database
   const [loads, setLoads] = useState([])
+
+  //stores history
+  const [showHistory, setShowHistory] = useState(false)
 
   // runs once when the page loads. grabs loads from supabase
   useEffect(() => {
@@ -48,6 +52,21 @@ function CustomerLoads() {
       }}>
         <h2>Track My Deliveries</h2>
       </div>
+
+      <button
+        onClick={() => setShowHistory(true)}
+        style={{
+          background: COLORS.red,
+          color: COLORS.white,
+          padding: "10px 16px",
+          border: "none",
+          cursor: "pointer",
+          borderRadius: "4px"
+        }
+      }
+    >
+    Delivery History
+    </button>
 
       {/* table */}
       <table style={{ width: "100%", background: COLORS.white, borderCollapse: "collapse", marginTop: "16px" }}>
@@ -80,6 +99,15 @@ function CustomerLoads() {
           No active loads found.
         </p>
       )}
+
+      {showHistory && (
+      <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0,0,0,0.5)" }}>
+        <div style={{ background: "white", width: "700px", margin: "100px auto", padding: "20px", position: "relative" }}>
+            <button onClick={() => setShowHistory(false)} style={{ position: "absolute", right: 10, top: 10 }}>✕</button>
+            <PastDeliveries />
+        </div>
+    </div>
+    )}
 
     </div>
   )
