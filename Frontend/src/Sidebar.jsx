@@ -2,17 +2,18 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from './supabase_client'
 
 export default function Sidebar({ currentPage, onNavigate, role }) {
-  const allItems = [
-    { id: "loadassignments", label: "Load Assignments", roles: ["dispatcher"] },
-    { id: "shipments", label: "Shipments", roles: ["manager"] },
-    { id: "customerloads", label: "Track My Deliveries", roles: ["customer"] },
-
-    { id: "hours", label: "Schedule", roles: ["driver"] },
-    { id: "messages", label: "Messages", roles: ["driver"], placeholder: true },
-    { id: "reports", label: "Make a Report", roles: ["driver"] },
+  const coreDashboardItems = [
+    { id: "loadassignments", label: "Load Assignments" },
+    { id: "shipments", label: "Shipments" },
+    { id: "customerloads", label: "Track My Deliveries" },
   ];
-
-  const mainItems = allItems.filter(item => item.roles.includes(role))
+  const driverItems = [
+    { id: "hours", label: "Schedule" },
+    { id: "messages", label: "Messages", placeholder: true },
+    { id: "reports", label: "Make a Report" },
+  ];
+  
+  const mainItems = role === "driver" ? driverItems : coreDashboardItems;
 
   const bottomItems = [
     { id: "settings", label: "Settings" },
@@ -70,14 +71,14 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
                 padding: "10px 14px",
                 border: "none",
                 borderRadius: "999px",
-                background: currentPage === item.id ? "#111827" : "transparent",
+                background: isActive ? "#111827" : "transparent",
                 color: "#f8fafc",
                 cursor: cursor,
                 fontSize: "15px",
                 textAlign: "left",
               }}
             >
-              <span style={{ width: "14px", height: "14px", borderRadius: "999px", background: currentPage === item.id ? "#f8fafc" : "#111827" }} />
+              <span style={{ width: "14px", height: "14px", borderRadius: "999px", background: isActive ? "#f8fafc" : "#111827" }} />
               {item.label}
             </button>
           );
@@ -86,7 +87,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 
       <div style={{ padding: "20px 16px 24px", borderTop: "1px solid rgba(255,255,255,0.12)", display: "flex", flexDirection: "column", gap: "14px" }}>
         {bottomItems.map((item) => (
-            <button
+          <button
             key={item.id}
             type="button"
             onClick={item.id === "logout" ? handleLogout : undefined}
