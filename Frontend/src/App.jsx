@@ -4,7 +4,6 @@ import LoadTable from "./loadtable";
 import { DATA_TEST } from "./loadhours.jsx";
 import LoadShipments from "./loadshipments";
 import Sidebar from "./Sidebar";
-import DriverSidebar from "./truckersidebar.jsx";
 import Login from "./pages/Login.jsx";
 import Hours from "./pages/hours.jsx";
 import MakeReport from "./makereport.jsx"
@@ -28,6 +27,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
   }, [initialPage]);
 
   const handleNavigate = (page) => {
+    if (page === "messages") return;
     setCurrentPage(page);
     if (page === "shipments") {
       navigate("/shipments");
@@ -69,6 +69,11 @@ function Dashboard({ initialPage = "loadassignments" }) {
     }
   };
 
+  const currentRole = 
+    currentPage === "hours" || currentPage === "reports" || currentPage === "messages" || initialPage === "hours" || initialPage === "reports" ? "driver" :
+    initialPage === "customerloads" ? "customer" : 
+    initialPage === "shipments" ? "manager" : "dispatcher";
+
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <header style={{ background: "#0B3C5D", color: "white", padding: "16px 24px", boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)" }}>
@@ -86,10 +91,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
         </div>
       </header>
       <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
-        {currentPage === "hours" || currentPage == "reports" ? (
-          <DriverSidebar currentPage={currentPage} onNavigate={handleNavigate} />
-        ) : (
-        <Sidebar currentPage={currentPage} onNavigate={handleNavigate} role={initialPage === "customerloads" ? "customer" : initialPage === "shipments" ? "manager" : "dispatcher"} />        )}
+        <Sidebar currentPage={currentPage} onNavigate={handleNavigate} role={currentRole} />
         <main style={{ flex: 1, background: "#f5f5f5" }}>
           {renderMainContent()}
         </main>
