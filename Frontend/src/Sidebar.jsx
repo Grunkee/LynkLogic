@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { supabase } from './supabase_client'
+import { useState, useEffect } from 'react'
 
 export default function Sidebar({ currentPage, onNavigate, role }) {
 	const coreDashboardItems = [
@@ -30,6 +31,16 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 		navigate("/login")
 	}
 
+	const [userEmail, setUserEmail] = useState('')
+
+	useEffect(() => {
+    	async function getUser() {
+        	const { data } = await supabase.auth.getUser()
+        	if (data?.user?.email) setUserEmail(data.user.email)
+    }
+    	getUser()
+	}, [])
+
 	return (
 		<aside
 			style={{
@@ -46,8 +57,10 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 			}}
 		>
 			<div style={{ background: "#d1d5db", color: "#111827", padding: "36px 20px 24px", textAlign: "center" }}>
-				<div style={{ width: "72px", height: "72px", margin: "0 auto 18px", borderRadius: "999px", background: "#111827" }} />
-				<p style={{ margin: 0, fontSize: "16px", fontWeight: 600 }}>FirstName LastName</p>
+			<div style={{ width: "72px", height: "72px", margin: "0 auto 18px", borderRadius: "999px", background: "#111827", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    			<img src="/src/assets/profile.png" style={{ width: "40px", height: "40px" }} />
+			</div>
+				<p style={{ margin: 0, fontSize: "12px", fontWeight: 600 }}>{userEmail}</p>
 			</div>
 
 			<nav style={{ flex: 1, padding: "24px 16px", display: "flex", flexDirection: "column", gap: "18px" }}>
