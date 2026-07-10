@@ -7,12 +7,13 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
     { id: "shipments", label: "Shipments" },
     { id: "customerloads", label: "Track My Deliveries" },
   ];
+
   const driverItems = [
     { id: "hours", label: "Schedule" },
     { id: "messages", label: "Messages", placeholder: true },
     { id: "reports", label: "Make a Report" },
   ];
-  
+
   const mainItems = role === "driver" ? driverItems : coreDashboardItems;
 
   const bottomItems = [
@@ -22,7 +23,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
   ];
 
   const navigate = useNavigate()
-
+  
   async function handleLogout() {
     await supabase.auth.signOut()
     navigate("/login")
@@ -52,6 +53,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
         {mainItems.map((item) => {
           const isActive = currentPage === item.id;
           const cursor = item.placeholder ? "default" : "pointer";
+          
           const handleClick = () => {
             if (item.placeholder) {
               return;
@@ -60,6 +62,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
               onNavigate(item.id);
             }
           };
+
           return (
             <button
               key={item.id}
@@ -76,6 +79,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
                 cursor: cursor,
                 fontSize: "15px",
                 textAlign: "left",
+                width: "100%"
               }}
             >
               <span style={{ width: "14px", height: "14px", borderRadius: "999px", background: isActive ? "#f8fafc" : "#111827" }} />
