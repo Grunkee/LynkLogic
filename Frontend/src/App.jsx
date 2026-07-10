@@ -9,7 +9,6 @@ import Hours from "./pages/hours.jsx";
 import MakeReport from "./makereport.jsx"
 import CustomerLoads from "./CustomerLoads";
 import Compliance from "./compliance.jsx";
-import InvoiceTable from "./invoices.jsx";
 import "./App.css";
 
 function Dashboard({ initialPage = "loadassignments" }) {
@@ -70,8 +69,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
 				return <MakeReport />;
 			case "compliance":
 				return <Compliance />;
-			case "invoices":
-				return <InvoiceTable />;
+
 			default:
 				return <LoadTable />;
 		}
@@ -122,7 +120,6 @@ function App() {
 				<Route path="/customerloads" element={<Dashboard initialPage="customerloads" />} />
 				<Route path="/customer" element={<Dashboard initialPage="customer" />} />
 				<Route path="/reports" element={<Dashboard key="reports" initialPage="reports" />} />
-				<Route path="/invoices" element={<Dashboard key="invoices" initialPage="invoices" />} />
 				
 				
 			</Routes>
