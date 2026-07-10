@@ -107,12 +107,13 @@ export default function MakeReport() {
                         border: "none", 
                         borderRadius: "8px", 
                         padding: "14px", 
-                        fontWeight: "bold", 
+                        fontWeight: "bold",
+                        fontSize: 14, 
                         cursor: "pointer",
                         marginTop: "8px"
                     }}
                 >
-                    Submit Damage Report
+                    Submit Report
                 </button>
             </form>
         </div>
