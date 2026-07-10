@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AssignLoad from "./loadassign";
 
 const COLORS = {
@@ -215,6 +216,7 @@ function getStatusStyle(status) {
 }
 
 export default function LoadShipments() {
+  const navigate = useNavigate();
   const [shipments] = useState(DUMMY_SHIPMENTS);
   const [filterStatus, setFilterStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
@@ -269,7 +271,7 @@ export default function LoadShipments() {
           <p style={{ margin: "10px 0 0", color: "#52606d" }}>Weekly pickup schedule with route filters and status controls.</p>
         </div>
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-          <button style={{ border: "none", borderRadius: "12px", background: "#f1f5f9", color: "#334155", padding: "10px 16px", cursor: "pointer" }}>
+          <button onClick={() => navigate('/manager')} style={{ border: "none", borderRadius: "12px", background: "#f1f5f9", color: "#334155", padding: "10px 16px", cursor: "pointer" }}>
             Manager
           </button>
           <button style={{ border: "none", borderRadius: "12px", background: "#f1f5f9", color: "#334155", padding: "10px 16px", cursor: "pointer" }}>
@@ -459,3 +461,5 @@ export default function LoadShipments() {
     </div>
   );
 }
+
+export { DUMMY_SHIPMENTS };
