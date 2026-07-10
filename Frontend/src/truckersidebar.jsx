@@ -4,7 +4,7 @@ export default function DriverSidebar({ currentPage, onNavigate }) {
   ];
 
   const truckerItems = [
-    { id: "messages", label: "Messages" },
+    { id: "messages", label: "Messages", placeholder: true },
     { id: "reports", label: "Make a Report" },
   ];
 
@@ -13,6 +13,46 @@ export default function DriverSidebar({ currentPage, onNavigate }) {
     { id: "help", label: "Help" },
     { id: "logout", label: "Logout" },
   ];
+const renderSidebarButton = (item, isBottomSection = false) => {
+    const isActive = currentPage === item.id;
+
+    const background = isActive ? "#111827" : "transparent";
+    const dotBackground = isActive ? "#f8fafc" : "#111827";
+    const cursor = item.placeholder ? "default" : "pointer";
+    const padding = isBottomSection ? "0px" : "10px 14px";
+    const fontSize = isBottomSection ? "14px" : "15px";
+
+    const handleClick = () => {
+      if (!item.placeholder && !item.isStatic && onNavigate) {
+        onNavigate(item.id);
+      }
+    };
+
+    return (
+      <button
+        key={item.id}
+        type="button"
+        onClick={handleClick}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          width: "100%",
+          padding: padding,
+          border: "none",
+          borderRadius: "999px",
+          background: background,
+          color: "#f8fafc",
+          cursor: cursor,
+          fontSize: fontSize,
+          textAlign: "left",
+        }}
+      >
+        <span style={{ width: "14px", height: "14px", borderRadius: "999px", background: dotBackground }} />
+        {item.label}
+      </button>
+    );
+  };
 
   return (
     <aside
@@ -35,79 +75,12 @@ export default function DriverSidebar({ currentPage, onNavigate }) {
       </div>
 
       <nav style={{ flex: 1, padding: "24px 16px", display: "flex", flexDirection: "column", gap: "18px" }}>
-        
-        {mainItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => onNavigate(item.id)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              padding: "10px 14px",
-              border: "none",
-              borderRadius: "999px",
-              background: currentPage === item.id ? "#111827" : "transparent",
-              color: "#f8fafc",
-              cursor: "pointer",
-              fontSize: "15px",
-              textAlign: "left",
-              width: "100%",
-            }}
-          >
-            <span style={{ width: "14px", height: "14px", borderRadius: "999px", background: currentPage === item.id ? "#f8fafc" : "#111827" }} />
-            {item.label}
-          </button>
-        ))}
-
-        {truckerItems.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              padding: "10px 14px",
-              border: "none",
-              borderRadius: "999px",
-              background: "transparent",
-              color: "#f8fafc",
-              cursor: "default",
-              fontSize: "15px",
-              textAlign: "left",
-              width: "100%",
-            }}
-          >
-            <span style={{ width: "14px", height: "14px", borderRadius: "999px", background: "#111827" }} />
-            {item.label}
-          </button>
-        ))}
+        {mainItems.map((item) => renderSidebarButton(item))}
+        {truckerItems.map((item) => renderSidebarButton(item))}
       </nav>
 
       <div style={{ padding: "20px 16px 24px", borderTop: "1px solid rgba(255,255,255,0.12)", display: "flex", flexDirection: "column", gap: "14px" }}>
-        {bottomItems.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              width: "100%",
-              border: "none",
-              background: "transparent",
-              color: "#f8fafc",
-              cursor: "pointer",
-              fontSize: "14px",
-              textAlign: "left",
-              padding: 0,
-            }}
-          >
-            <span style={{ width: "14px", height: "14px", borderRadius: "999px", background: "#111827" }} />
-            {item.label}
-          </button>
-        ))}
+        {bottomItems.map((item) => renderSidebarButton(item, true))}
       </div>
     </aside>
   );
