@@ -95,11 +95,12 @@ function CustomerLoads() {
               <td style={{ padding: "12px 16px", fontSize: "14px", color: "#333", verticalAlign: "middle" }}>{formatETA(load.eta)}</td>     
               <td style={{ padding: "12px 16px", fontSize: "14px", verticalAlign: "middle" }}>
   
-  <span style={{
+<span style={{
     ...getStatusStyle(load.status),
     padding: "4px 10px",
     borderRadius: "10px",
-    fontSize: "13px"
+    fontSize: "13px",
+    whiteSpace: "nowrap"
   }}>
     {load.status}
   </span>
