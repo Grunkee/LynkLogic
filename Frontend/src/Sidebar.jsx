@@ -1,12 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 import { supabase } from './supabase_client'
 
-export default function Sidebar({ currentPage, onNavigate }) {
-  const mainItems = [
-    { id: "loadassignments", label: "Load Assignments" },
-    { id: "shipments", label: "Shipments" },
-    { id: "customerloads", label: "Track My Deliveries" },
+export default function Sidebar({ currentPage, onNavigate, role }) {
+  const allItems = [
+    { id: "loadassignments", label: "Load Assignments", roles: ["dispatcher"] },
+    { id: "shipments", label: "Shipments", roles: ["manager"] },
+    { id: "customerloads", label: "Track My Deliveries", roles: ["customer"] },
   ];
+
+  const mainItems = allItems.filter(item => item.roles.includes(role))
 
   const bottomItems = [
     { id: "settings", label: "Settings" },

@@ -89,8 +89,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
         {currentPage === "hours" || currentPage == "reports" ? (
           <DriverSidebar currentPage={currentPage} onNavigate={handleNavigate} />
         ) : (
-          <Sidebar currentPage={currentPage} onNavigate={handleNavigate} />
-        )}
+        <Sidebar currentPage={currentPage} onNavigate={handleNavigate} role={initialPage === "customerloads" ? "customer" : initialPage === "shipments" ? "manager" : "dispatcher"} />        )}
         <main style={{ flex: 1, background: "#f5f5f5" }}>
           {renderMainContent()}
         </main>
