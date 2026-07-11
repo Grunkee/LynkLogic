@@ -16,6 +16,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 		{ id: "shipments", label: "Shipments", roles: ["manager"] },
 		{ id: "customerloads", label: "Track My Deliveries", roles: ["customer"] },
 		{ id: "hours", label: "Schedule", roles: ["driver"] },
+		{ id: "invoices", label: "Invoices", roles: ["manager"] },
 
 	];
 

@@ -121,9 +121,9 @@ function App() {
 				<Route path="/customer" element={<Dashboard initialPage="customer" />} />
 				<Route path="/reports" element={<Dashboard key="reports" initialPage="reports" />} />
 				<Route path="/invoices" element={<Dashboard key="invoices" initialPage="invoices" />} />
-				
-				
-				
+
+
+
 			</Routes>
 		</BrowserRouter>
 	);
