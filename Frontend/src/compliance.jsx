@@ -87,17 +87,17 @@ async function fetchComplianceData() {
 					timestamp: parsed.timestamp,
 					user: parsed.user
 				});
-			} catch {}
+			} catch { }
 		} else if (i.history) {
 			let hist = i.history;
 			if (typeof hist === 'string') {
-				try { hist = JSON.parse(hist); } catch {}
+				try { hist = JSON.parse(hist); } catch { }
 			}
 			if (Array.isArray(hist)) {
 				hist.forEach((h, idx) => {
 					let parsedH = h;
 					if (typeof h === 'string') {
-						try { parsedH = JSON.parse(h); } catch {}
+						try { parsedH = JSON.parse(h); } catch { }
 					}
 					allHistory.push({
 						id: `${i.id}-h-${idx}`,
@@ -122,17 +122,17 @@ async function fetchComplianceData() {
 					timestamp: parsed.timestamp,
 					user: parsed.user
 				});
-			} catch {}
+			} catch { }
 		} else if (i.history) {
 			let hist = i.history;
 			if (typeof hist === 'string') {
-				try { hist = JSON.parse(hist); } catch {}
+				try { hist = JSON.parse(hist); } catch { }
 			}
 			if (Array.isArray(hist)) {
 				hist.forEach((h, idx) => {
 					let parsedH = h;
 					if (typeof h === 'string') {
-						try { parsedH = JSON.parse(h); } catch {}
+						try { parsedH = JSON.parse(h); } catch { }
 					}
 					allHistory.push({
 						id: `${i.id}-h-${idx}`,
@@ -144,7 +144,7 @@ async function fetchComplianceData() {
 		}
 	});
 
-	return { drivers, vehicles, history: allHistory.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)) };
+	return { drivers, vehicles, history: allHistory.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)) };
 }
 
 function daysUntil(dateStr) {
@@ -400,7 +400,7 @@ export default function Compliance() {
 				oldDate = i.expires;
 				label = i.label;
 				let hist = i.history || [];
-				if (typeof hist === 'string') { try { hist = JSON.parse(hist); } catch {} }
+				if (typeof hist === 'string') { try { hist = JSON.parse(hist); } catch { } }
 				existingHistory = Array.isArray(hist) ? hist : [];
 			}
 		} else {
@@ -410,7 +410,7 @@ export default function Compliance() {
 				oldDate = i.expires;
 				label = i.label;
 				let hist = i.history || [];
-				if (typeof hist === 'string') { try { hist = JSON.parse(hist); } catch {} }
+				if (typeof hist === 'string') { try { hist = JSON.parse(hist); } catch { } }
 				existingHistory = Array.isArray(hist) ? hist : [];
 			}
 		}
@@ -492,7 +492,7 @@ export default function Compliance() {
 			`"${d.email || ''}"`,
 			`"${d.status || ''}"`
 		].join(","));
-		
+
 		const csvContent = [headers.join(","), ...rows].join("\n");
 		const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
 		const url = URL.createObjectURL(blob);

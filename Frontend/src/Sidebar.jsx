@@ -3,7 +3,7 @@ import { supabase } from './supabase_client'
 import { useState, useEffect } from 'react'
 
 export default function Sidebar({ currentPage, onNavigate, role }) {
-	
+
 	const driverItems = [
 		{ id: "hours", label: "Schedule" },
 		{ id: "messages", label: "Messages", placeholder: true },
@@ -15,11 +15,12 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 		{ id: "Compliance", label: "Compliance Records", roles: ["manager"] },
 		{ id: "shipments", label: "Shipments", roles: ["manager"] },
 		{ id: "customerloads", label: "Track My Deliveries", roles: ["customer"] },
-		{ id: "invoices", label: "Invoices" },
-		
+		{ id: "hours", label: "Schedule", roles: ["driver"] },
+		{ id: "invoices", label: "Invoices", roles: ["manager"] },
+
 	];
 
-	const mainItems = role === "driver" ? driverItems : coreDashboardItems.filter(item => item.roles.includes(role))
+	const mainItems = role === "driver" ? driverItems : coreDashboardItems
 
 	const bottomItems = [
 		{ id: "settings", label: "Settings" },
@@ -37,11 +38,11 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 	const [userEmail, setUserEmail] = useState('')
 
 	useEffect(() => {
-    	async function getUser() {
-        	const { data } = await supabase.auth.getUser()
-        	if (data?.user?.email) setUserEmail(data.user.email)
-    }
-    	getUser()
+		async function getUser() {
+			const { data } = await supabase.auth.getUser()
+			if (data?.user?.email) setUserEmail(data.user.email)
+		}
+		getUser()
 	}, [])
 
 	return (
@@ -60,9 +61,9 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 			}}
 		>
 			<div style={{ background: "#d1d5db", color: "#111827", padding: "36px 20px 24px", textAlign: "center" }}>
-			<div style={{ width: "72px", height: "72px", margin: "0 auto 18px", borderRadius: "999px", background: "#111827", display: "flex", alignItems: "center", justifyContent: "center" }}>
-    			<img src="/src/assets/profile.png" style={{ width: "40px", height: "40px" }} />
-			</div>
+				<div style={{ width: "72px", height: "72px", margin: "0 auto 18px", borderRadius: "999px", background: "#111827", display: "flex", alignItems: "center", justifyContent: "center" }}>
+					<img src="/src/assets/profile.png" style={{ width: "40px", height: "40px" }} />
+				</div>
 				<p style={{ margin: 0, fontSize: "12px", fontWeight: 600 }}>{userEmail}</p>
 			</div>
 

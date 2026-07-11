@@ -34,16 +34,8 @@ export default function Login() {
 					.select("role")
 					.eq("email", email)
 					.single()
-
-				if (userData?.role === "dispatcher") {
-					navigate("/dashboard")
-				} else if (userData?.role === "customer") {
-					navigate("/customerloads")
-				} else if (userData?.role === "manager") {
-					navigate("/shipments")
-				} else {
-					navigate("/dashboard")
-				}
+	
+				navigate("/dashboard")
 			}
 		} catch (error) {
 			setMessage({ type: 'error', text: error.message });

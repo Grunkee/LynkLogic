@@ -9,7 +9,7 @@ import Hours from "./pages/hours.jsx";
 import MakeReport from "./makereport.jsx"
 import CustomerLoads from "./CustomerLoads";
 import Compliance from "./compliance.jsx";
-import Invoicetable from "./invoices.jsx";
+import InvoiceTable from "./invoices.jsx";
 import "./App.css";
 
 function Dashboard({ initialPage = "loadassignments" }) {
@@ -41,6 +41,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
 			navigate("/reports")
 		} else if (page == "Compliance") {
 			navigate("/Compliance")
+		} else if (page === "invoices") {
+			navigate("/invoices")
 		} else {
 			navigate("/dashboard");
 		}
@@ -70,7 +72,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
 				return <MakeReport />;
 			case "compliance":
 				return <Compliance />;
-
+			case "invoices":
+				return <InvoiceTable />;
 			default:
 				return <LoadTable />;
 		}
