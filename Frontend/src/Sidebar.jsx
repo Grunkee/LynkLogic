@@ -17,7 +17,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 		{ id: "customerloads", label: "Track My Deliveries", roles: ["customer"] },
 	];
 
-	const mainItems = role === "driver" ? driverItems : coreDashboardItems.filter(item => item.roles.includes(role))
+	const mainItems = role === "driver" ? driverItems : coreDashboardItems
 
 	const bottomItems = [
 		{ id: "settings", label: "Settings" },
