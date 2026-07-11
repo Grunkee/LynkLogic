@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { supabase } from './supabase_client';
 
 export default function MakeReport() {
     const [showForm, setShowForm] = useState(false);
@@ -18,28 +19,26 @@ export default function MakeReport() {
         { id: "REP-9821", date: "2026-07-08", type: "Engine / Mechanical", status: "In Progress" },
     ]);
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-        
-        if (!vehicleId || !description) {
-            alert("Please fill out all required fields.");
-            return;
-        }
-
-        const newReportRow = {
-            id: `REP-${Math.floor(1000 + Math.random() * 9000)}`,
-            date: new Date().toISOString().split('T')[0],
-            type: reportType === "Engine" ? "Engine / Mechanical" : reportType,
-            status: "Pending"
+        const payload = { 
+            vehicle_id: vehicleId, 
+            type: reportType, 
+            description: description 
         };
+        const payload2 = { 
+            Notif_id: vehicleId, 
+            Notif_title: "Damage Report",
+            Notif_msg: description 
+        };
+        console.log("Sending payload to Supabase:", payload);
+        const { data, error } = await supabase.from('damage_reports').insert([payload]).select();
 
-        setReportHistory((prev) => [newReportRow, ...prev]);
-        alert("Report successfully added to history!");
-        
-        setVehicleId("");
-        setDescription("");
-        setReportType("Engine");
-        setShowForm(false);
+        if (error) {
+            console.error("Supabase Error Details:", error);
+        } else {
+            console.log("Success! Server returned:", data);
+        }
     }
 
     if (showForm) {
