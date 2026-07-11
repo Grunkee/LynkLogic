@@ -28,12 +28,14 @@ export default function Login() {
 					throw error;
 				}
 				setMessage({ type: 'success', text: 'Logged in successfully!' });
-				navigate("/dashboard")
-				// navigates to the login table page once the user has successfully logged in
-				// TODO make a home page for the user to go to after logging in
-				// TODO add a way for the user to signup, by inputting credentials
-				navigate("/table")
 
+				const { data: userData } = await supabase
+					.from("users")
+					.select("role")
+					.eq("email", email)
+					.single()
+	
+				navigate("/dashboard")
 			}
 		} catch (error) {
 			setMessage({ type: 'error', text: error.message });

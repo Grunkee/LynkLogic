@@ -30,7 +30,7 @@ export default function Schedule({
             borderRadius: "8px",
             border: "1px solid var(--border)",
             background: "#ffffff",
-            color: "var(--text-h)",
+            color: "#000000",
             outline: "none"
           }}
         />
@@ -80,10 +80,10 @@ export default function Schedule({
         </div>
 
         <div style={{ display: "flex", gap: "12px" }}>
-          <button onClick={onAvailabilityToggle} style={{ background: isAvailable ? "#F59E0B" : "#10B981", color: "#fff", border: "none", padding: "10px 18px", borderRadius: "6px", cursor: "pointer", fontWeight: "600" }}>
+          <button onClick={onAvailabilityToggle} style={{ background: isAvailable ? "#F59E0B" : "#2b7cb6", color: "#fff", border: "none", padding: "10px 18px", borderRadius: "6px", cursor: "pointer", fontWeight: "600" }}>
             Set {isAvailable ? "Unavailable" : "Available"}
           </button>
-          <button onClick={onClockToggle} style={{ background: isClockedIn ? "#D9534F" : "#111827", color: "#fff", border: "none", padding: "10px 18px", borderRadius: "6px", cursor: "pointer", fontWeight: "600" }}>
+          <button onClick={onClockToggle} style={{ background: isClockedIn ? "#D9534F" : "#2d9473", color: "#fff", border: "none", padding: "10px 18px", borderRadius: "6px", cursor: "pointer", fontWeight: "600" }}>
             {isClockedIn ? "Clock Out" : "Clock In"}
           </button>
         </div>
@@ -92,7 +92,7 @@ export default function Schedule({
       <div style={{ width: "100%", background: "#ffffff", border: "1px solid var(--border)", borderRadius: "12px", padding: "24px", boxSizing: "border-box" }}>
         <h3 style={{ margin: "0 0 16px 0", fontSize: "16px" }}>Weekly Report</h3>
         
-        <div style={{ display: "grid", gridTemplateColumns: "130px 180px 1fr 100px 90px", padding: "12px 18px", background: "#374151", borderRadius: "6px", color: "#ffffff", fontWeight: "600" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "130px 180px 1fr 100px 90px", padding: "12px 18px", background: "#0B3C5D", borderRadius: "6px", color: "#ffffff", fontWeight: "600" }}>
           <div>Date</div>
           <div>Schedule</div>
           <div style={{ textAlign: "right" }}>Hours</div>
