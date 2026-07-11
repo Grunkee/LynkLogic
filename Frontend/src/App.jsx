@@ -9,7 +9,7 @@ import Hours from "./pages/hours.jsx";
 import MakeReport from "./makereport.jsx"
 import CustomerLoads from "./CustomerLoads";
 import Compliance from "./compliance.jsx";
-import InvoiceTable from "./invoices.jsx";
+import Invoicetable from "./invoices.jsx";
 import "./App.css";
 
 function Dashboard({ initialPage = "loadassignments" }) {
