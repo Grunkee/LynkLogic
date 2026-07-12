@@ -44,7 +44,7 @@ function AnalyticsDashboard() {
         // Get route optimization information
         const { data: routeData, error: routeError } =
             await supabase
-            .from("routes")
+            .from("route")
             .select("*");
 
         if(routeError){
@@ -71,7 +71,7 @@ function AnalyticsDashboard() {
         // Get compliance statistics
         const { data: complianceData, error: complianceError } =
             await supabase
-            .from("compliance")
+            .from("compliance_items")
             .select("*");
 
         if(complianceError){
@@ -86,7 +86,7 @@ function AnalyticsDashboard() {
     // Converts Supabase route data into a format Chart.js can display
     const routeChart = {
 
-        labels: routes.map(
+        labels: route.map(
             route => route.route_name
         ),
 
@@ -95,7 +95,7 @@ function AnalyticsDashboard() {
                 label:"Distance Saved (KM)",
 
                 data:
-                routes.map(
+                route.map(
                     route => route.distance_saved
                 )
             }
