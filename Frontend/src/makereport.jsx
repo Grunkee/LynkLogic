@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from './supabase_client';
 
 export default function MakeReport() {
@@ -7,37 +7,65 @@ export default function MakeReport() {
     const [vehicleId, setVehicleId] = useState("");
     const [reportType, setReportType] = useState("Engine");
     const [description, setDescription] = useState("");
+    const [reportHistory, setReportHistory] = useState([]);
 
-    const [reportHistory, setReportHistory] = useState([
-        { id: "REP-9821", date: "2026-07-08", type: "Engine / Mechanical", status: "In Progress" },
-        { id: "REP-9744", date: "2026-07-05", type: "Tires", status: "Resolved" },
-        { id: "REP-9610", date: "2026-07-01", type: "Lights", status: "Resolved" },
-        { id: "REP-9532", date: "2026-06-28", type: "Brakes", status: "Pending" },
-        { id: "REP-9411", date: "2026-06-22", type: "Accident", status: "Resolved" },
-        { id: "REP-9302", date: "2026-06-15", type: "Delays", status: "In Progress" },
-        { id: "REP-9199", date: "2026-06-10", type: "Other Issues", status: "Resolved" },
-        { id: "REP-9821", date: "2026-07-08", type: "Engine / Mechanical", status: "In Progress" },
-    ]);
+    useEffect(() => {
+        async function fetchReportHistory() {
+            const { data, error } = await supabase
+                .from('damage_reports')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error("Error details:", error);
+            } else if (data) {
+                const formattedRows = data.map((serverRecord) => ({
+                    id: serverRecord.vehicle_id,
+                    date: serverRecord.created_at ? new Date(serverRecord.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+                    type: serverRecord.type === "Engine" ? "Engine / Mechanical" : serverRecord.type,
+                    status: "Submitted"
+                }));
+                setReportHistory(formattedRows);
+            }
+        }
+        fetchReportHistory();
+    }, []);
 
     async function handleSubmit(e) {
         e.preventDefault();
+        if (!vehicleId || !description) {
+            return;
+        }
         const payload = { 
             vehicle_id: vehicleId, 
             type: reportType, 
-            description: description 
+            description: description,
+            email: "cotesamara@gmail.com" 
         };
-        const payload2 = { 
-            Notif_id: vehicleId, 
-            Notif_title: "Damage Report",
-            Notif_msg: description 
-        };
-        console.log("Sending payload to Supabase:", payload);
         const { data, error } = await supabase.from('damage_reports').insert([payload]).select();
-
         if (error) {
             console.error("Supabase Error Details:", error);
-        } else {
-            console.log("Success! Server returned:", data);
+            return;
+        }
+        if (data && data.length > 0) {
+            console.log("Saved:", data);
+            const serverRecord = data[0];
+            const newReportRow = {
+                id: serverRecord.vehicle_id,
+                date: serverRecord.created_at ? new Date(serverRecord.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+                type: serverRecord.type === "Engine" ? "Engine / Mechanical" : serverRecord.type,
+                status: "Submitted"
+            };
+            setReportHistory((prev) => [newReportRow, ...prev]);
+            const payload2 = { 
+                Notif_id: vehicleId, 
+                Notif_title: "Damage Report",
+                Notif_msg: description 
+            };
+            setVehicleId("");
+            setDescription("");
+            setReportType("Engine");
+            setShowForm(false);
         }
     }
 
@@ -161,3 +189,4 @@ export default function MakeReport() {
         </div>
     );
 }
+
