@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { supabase } from './supabase_client';
 
 export default function MakeReport() {
     const [showForm, setShowForm] = useState(false);
@@ -18,28 +19,26 @@ export default function MakeReport() {
         { id: "REP-9821", date: "2026-07-08", type: "Engine / Mechanical", status: "In Progress" },
     ]);
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-        
-        if (!vehicleId || !description) {
-            alert("Please fill out all required fields.");
-            return;
-        }
-
-        const newReportRow = {
-            id: `REP-${Math.floor(1000 + Math.random() * 9000)}`,
-            date: new Date().toISOString().split('T')[0],
-            type: reportType === "Engine" ? "Engine / Mechanical" : reportType,
-            status: "Pending"
+        const payload = { 
+            vehicle_id: vehicleId, 
+            type: reportType, 
+            description: description 
         };
+        const payload2 = { 
+            Notif_id: vehicleId, 
+            Notif_title: "Damage Report",
+            Notif_msg: description 
+        };
+        console.log("Sending payload to Supabase:", payload);
+        const { data, error } = await supabase.from('damage_reports').insert([payload]).select();
 
-        setReportHistory((prev) => [newReportRow, ...prev]);
-        alert("Report successfully added to history!");
-        
-        setVehicleId("");
-        setDescription("");
-        setReportType("Engine");
-        setShowForm(false);
+        if (error) {
+            console.error("Supabase Error Details:", error);
+        } else {
+            console.log("Success! Server returned:", data);
+        }
     }
 
     if (showForm) {
@@ -130,15 +129,15 @@ export default function MakeReport() {
                 <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
                     <thead>
                         <tr style={{ background: "#0B3C5D", borderBottom: "1px solid #cbd5e1" }}>
-                            <th style={{ padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>ID</th>
-                            <th style={{ padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>Report Date</th>
-                            <th style={{ padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>Type of Report</th>
-                            <th style={{ padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>Status</th>
+                            <th style={{ position: "sticky", top: 0, background: "#0B3C5D", zIndex: 1, padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>ID</th>
+                            <th style={{ position: "sticky", top: 0, background: "#0B3C5D", zIndex: 1, padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>Report Date</th>
+                            <th style={{ position: "sticky", top: 0, background: "#0B3C5D", zIndex: 1, padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>Type of Report</th>
+                            <th style={{ position: "sticky", top: 0, background: "#0B3C5D", zIndex: 1, padding: "14px 16px", color: "#ffffff", fontWeight: "600" }}>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {reportHistory.map((report) => (
-                            <tr key={report.id} style={{ borderBottom: "1px solid #f1f5f9" }}>
+                        {reportHistory.map((report, index) => (
+                            <tr key={report.id ? `${report.id}-${index}` : index} style={{ borderBottom: "1px solid #f1f5f9" }}>
                                 <td style={{ padding: "14px 16px", color: "#0B3C5D", fontWeight: "bold" }}>{report.id}</td>
                                 <td style={{ padding: "14px 16px", color: "#334155" }}>{report.date}</td>
                                 <td style={{ padding: "14px 16px", color: "#334155" }}>{report.type}</td>

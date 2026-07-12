@@ -1,15 +1,8 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import LoadTable from "./loadtable";
-import { DATA_TEST } from "./loadhours.jsx";
 import LoadShipments from "./loadshipments";
 import Manager from "./pages/Manager.jsx";
 import Sidebar from "./Sidebar";
-import Login from "./pages/Login.jsx";
-import Hours from "./pages/hours.jsx";
-import MakeReport from "./makereport.jsx"
-import CustomerLoads from "./CustomerLoads";
-import Compliance from "./compliance.jsx";
 import "./App.css";
 
 function Dashboard({ initialPage = "loadassignments" }) {
@@ -82,30 +75,34 @@ function Dashboard({ initialPage = "loadassignments" }) {
 			initialPage === "customerloads" ? "customer" :
 				initialPage === "shipments" ? "manager" : "dispatcher";
 
-	return (
-		<div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-			<header style={{ background: "#0B3C5D", color: "white", padding: "16px 24px", boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)" }}>
-				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-					<div style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0, flex: "1 1 220px" }}>
-						<div style={{ minWidth: 0 }}>
-							<img src="/src/assets/logo.png" style={{ height: "40px" }} />
-						</div>
-					</div>
-					<div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "flex-end", alignItems: "center", flex: "1 1 220px", width: "100%" }}>
-						<button style={{ border: "1px solid rgba(255,255,255,0.25)", borderRadius: "999px", background: "rgba(255,255,255,0.08)", color: "white", padding: "10px 16px", cursor: "pointer", flex: "1 1 120px", minWidth: "110px", maxWidth: "140px" }}>
-							Today
-						</button>
-					</div>
-				</div>
-			</header>
-			<div style={{ display: "flex", flex: 1, minHeight: 0 }}>
-				<Sidebar currentPage={currentPage} onNavigate={handleNavigate} role={currentRole} />
-				<main style={{ flex: 1, background: "#f5f5f5" }}>
-					{renderMainContent()}
-				</main>
-			</div>
-		</div>
-	);
+  return (
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <header style={{ background: "#0B3C5D", color: "white", padding: "16px 24px", boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+            <div style={{ width: "48px", height: "48px", borderRadius: "999px", background: "#ffffff", boxShadow: "0 4px 18px rgba(0,0,0,0.12)" }} />
+            <div>
+              <p style={{ margin: 0, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.8 }}>LynkLogic</p>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <button style={{ border: "1px solid rgba(255,255,255,0.25)", borderRadius: "999px", background: "rgba(255,255,255,0.08)", color: "white", padding: "10px 16px", cursor: "pointer" }}>
+              Today
+            </button>
+            <button style={{ border: "1px solid rgba(255,255,255,0.25)", borderRadius: "999px", background: "rgba(255,255,255,0.08)", color: "white", padding: "10px 16px", cursor: "pointer" }}>
+              Settings
+            </button>
+          </div>
+        </div>
+      </header>
+      <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
+        <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} />
+        <main style={{ flex: 1, background: "#f5f5f5" }}>
+          {currentPage === "loadassignments" ? <LoadTable /> : <LoadShipments />}
+        </main>
+      </div>
+    </div>
+  );
 }
 
 function App() {
