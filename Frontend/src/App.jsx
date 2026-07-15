@@ -11,6 +11,7 @@ import "./App.css";
 import Hours from "./pages/hours.jsx";
 import MakeReport from "./makereport.jsx";
 import Compliance from "./compliance.jsx";
+import Invoices from "./invoices.jsx";
 
 function Dashboard({ initialPage = "loadassignments" }) {
 	const [currentPage, setCurrentPage] = useState(initialPage);
@@ -32,15 +33,17 @@ function Dashboard({ initialPage = "loadassignments" }) {
 		if (page === "messages") return;
 		setCurrentPage(page);
 		if (page === "shipments") {
-			navigate("/shipments");
+			navigate("/shipments")
 		} else if (page === "hours") {
-			navigate("/hours");
+			navigate("/hours")
 		} else if (page === "customerloads") {
-			navigate("/customerloads");
+			navigate("/customerloads")
 		} else if (page == "reports") {
 			navigate("/reports")
 		} else if (page == "Compliance") {
-			navigate("/Compliance")
+			navigate("/compliance")
+		} else if (page === "invoices") {
+    		navigate("/invoices")
 		} else {
 			navigate("/dashboard");
 		}
@@ -72,6 +75,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
 				return <Compliance />;
 			case "manager":
 				return <Manager />;
+			case "invoices":
+    			return <Invoices />;
 			default:
 				return <LoadTable />;
 		}
@@ -103,7 +108,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
         </div>
       </header>
       <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
-        <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} />
+			<Sidebar currentPage={currentPage} onNavigate={handleNavigate} />
         <main style={{ flex: 1, background: "#f5f5f5" }}>
           {renderMainContent()}
         </main>
@@ -127,6 +132,7 @@ function App() {
 				<Route path="/customerloads" element={<Dashboard initialPage="customerloads" />} />
 				<Route path="/customer" element={<Dashboard initialPage="customer" />} />
 				<Route path="/reports" element={<Dashboard key="reports" initialPage="reports" />} />
+				<Route path="/invoices" element={<Dashboard initialPage="invoices" />} />
 			</Routes>
 		</BrowserRouter>
 	);
