@@ -102,7 +102,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
         </div>
       </header>
       <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
-			<Sidebar currentPage={currentPage} onNavigate={handleNavigate} />
+		<Sidebar currentPage={currentPage} onNavigate={handleNavigate} role={currentRole} />
         <main style={{ flex: 1, background: "#f5f5f5" }}>
           {renderMainContent()}
         </main>
