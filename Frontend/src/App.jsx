@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { DATA_TEST } from "./loadhours.jsx";
 import Login from "./pages/Login.jsx";
 import Manager from "./pages/Manager.jsx";
+import CustomerLoads from "./CustomerLoads";
 import Sidebar from "./Sidebar";
 import "./App.css";
 
