@@ -1,6 +1,7 @@
 import { useState } from "react";
 import LoadTable from "./loadtable";
 import LoadShipments from "./loadshipments";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Manager from "./pages/Manager.jsx";
 import Sidebar from "./Sidebar";
 import "./App.css";
