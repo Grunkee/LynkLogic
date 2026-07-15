@@ -8,6 +8,10 @@ import Manager from "./pages/Manager.jsx";
 import CustomerLoads from "./CustomerLoads";
 import Sidebar from "./Sidebar";
 import "./App.css";
+import Hours from "./pages/hours.jsx";
+import MakeReport from "./makereport.jsx";
+import Compliance from "./compliance.jsx";
+import DriverSidebar from "./truckersidebar.jsx";
 
 function Dashboard({ initialPage = "loadassignments" }) {
 	const [currentPage, setCurrentPage] = useState(initialPage);
