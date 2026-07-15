@@ -98,7 +98,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
       <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
         <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} />
         <main style={{ flex: 1, background: "#f5f5f5" }}>
-          {currentPage === "loadassignments" ? <LoadTable /> : <LoadShipments />}
+          {renderMainContent()}
         </main>
       </div>
     </div>
