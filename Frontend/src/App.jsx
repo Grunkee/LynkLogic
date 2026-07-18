@@ -12,6 +12,7 @@ import Hours from "./pages/hours.jsx";
 import MakeReport from "./makereport.jsx";
 import Compliance from "./compliance.jsx";
 import Invoices from "./invoices.jsx";
+import Help from "./help.jsx";
 
 function Dashboard({ initialPage = "loadassignments" }) {
 	const [currentPage, setCurrentPage] = useState(initialPage);
@@ -44,6 +45,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
 			navigate("/compliance")
 		} else if (page === "invoices") {
     		navigate("/invoices")
+		} else if (page === "help") {
+			navigate("/help")
 		} else {
 			navigate("/dashboard");
 		}
@@ -77,6 +80,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
 				return <Manager />;
 			case "invoices":
     			return <Invoices />;
+			case "help":
+				return <Help />;
 			default:
 				return <LoadTable />;
 		}
@@ -127,6 +132,7 @@ function App() {
 				<Route path="/customer" element={<Dashboard initialPage="customer" />} />
 				<Route path="/reports" element={<Dashboard key="reports" initialPage="reports" />} />
 				<Route path="/invoices" element={<Dashboard initialPage="invoices" />} />
+				<Route path="/help" element={<Dashboard initialPage="help" />} />
 			</Routes>
 		</BrowserRouter>
 	);
