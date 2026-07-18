@@ -112,7 +112,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 					<button
 						key={item.id}
 						type="button"
-						onClick={item.id === "logout" ? handleLogout : undefined}
+						onClick={item.id === "logout" ? handleLogout : item.id === "help" ? () => navigate("/help") : undefined}
 						style={{
 							display: "flex",
 							alignItems: "center",

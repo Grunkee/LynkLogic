@@ -40,10 +40,32 @@ function FAQ() {
                 color: COLORS.navy
             }}>Frequently Asked Questions</h2>
 
+            <div style={{
+                marginTop: "24px",
+                textAlign: "right"
+            }}>
+                <button style={{
+                    background: COLORS.red,
+                    color: COLORS.white,
+                    padding: "10px 20px",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontSize: "14px"
+                }}>
+                    Ask a Question
+                </button>
+
+            </div>
+
             {faqs.map(faq => (
+
                 <div
                     key={faq.id}
                     style={{
+                        marginTop: "41px",
+                        display: "flex",
+                        gap: "24px",
                         marginBottom: "20px", 
                         padding: "16px", 
                         background: "#f5f5f5", 
@@ -52,13 +74,22 @@ function FAQ() {
                 >
                     <p style={{
                         color: COLORS.navy, 
-                        fontWeight: "bold" 
+                        fontWeight: "bold",
+                        width: "40%",
+                        flexShrink: 0,
+                        margin: 0,
+                        fontSize: "14px"
                         }}>{faq.question}</p>
 
-                    <p>{faq.answer}</p>
+                    <p style={{ 
+                        margin: 0,
+                        color: COLORS.dark,
+                        fontSize: "16px"
+                    }}>{faq.answer}</p>
                 
                 </div>
             ))}
+
         </div>
     )
 }
