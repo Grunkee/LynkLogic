@@ -284,7 +284,7 @@ export default function LoadTable() {
 
       {/* assign load modal */}
       {showModal && (
-        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0,0,0,0.5)" }}>
+        <div style={{ position: "fixed", tzop: 0, left: 0, width: "100%", height: "100%", background: "rgba(0,0,0,0.5)" }}>
           <div style={{ background: "white", width: "400px", margin: "100px auto", padding: "20px", position: "relative" }}>
             <button onClick={() => setShowModal(false)} style={{ position: "absolute", right: 10, top: 10 }}>
               ✕
