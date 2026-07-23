@@ -85,7 +85,7 @@ export default function Manager() {
           <h2 style={{ margin: 0 }}>Manager — Route KPIs</h2>
           <p style={{ margin: 0, color: "#dbeafe" }}>Route performance summary and shipment details</p>
         </div>
-        <div style={{ display: "flex", gap: 10 }}>
+        <div style={{ display: "wrap", gap: 10, flexWrap:  "wrap" }}>
           <button style={{ background: "white", color: "#0B3C5D", padding: "8px 12px", borderRadius: 12, border: "none", cursor: "pointer" }}>Refresh</button>
           <button style={{ background: "#D9534F", color: "white", padding: "8px 12px", borderRadius: 12, border: "none", cursor: "pointer" }}>Export</button>
         </div>
