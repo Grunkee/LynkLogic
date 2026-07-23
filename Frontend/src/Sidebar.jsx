@@ -6,7 +6,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 
 	const driverItems = [
 		{ id: "hours", label: "Schedule" },
-		{ id: "messages", label: "Messages", placeholder: true },
+		{ id: "messages", label: "Messages" },
 		{ id: "reports", label: "Make a Report" },
 	];
 
@@ -16,8 +16,8 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 		{ id: "shipments", label: "Shipments", roles: ["manager"] },
 		{ id: "customerloads", label: "Track My Deliveries", roles: ["customer"] },
 		{ id: "hours", label: "Schedule", roles: ["driver"] },
+		{ id: "messages", label: "Messages" },
 		{ id: "invoices", label: "Invoices", roles: ["manager"] },
-
 	];
 
 	const mainItems = role === "driver" ? driverItems : coreDashboardItems

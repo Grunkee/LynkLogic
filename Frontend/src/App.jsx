@@ -13,6 +13,7 @@ import MakeReport from "./makereport.jsx";
 import Compliance from "./compliance.jsx";
 import Invoices from "./invoices.jsx";
 import Help from "./help.jsx";
+import Messages from "./messages.jsx";
 
 function Dashboard({ initialPage = "loadassignments" }) {
 	const [currentPage, setCurrentPage] = useState(initialPage);
@@ -31,7 +32,6 @@ function Dashboard({ initialPage = "loadassignments" }) {
 	}, [initialPage]);
 
 	const handleNavigate = (page) => {
-		if (page === "messages") return;
 		setCurrentPage(page);
 		if (page === "shipments") {
 			navigate("/shipments")
@@ -41,6 +41,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
 			navigate("/customerloads")
 		} else if (page == "reports") {
 			navigate("/reports")
+		} else if (page === "messages") {
+			navigate("/messages")
 		} else if (page == "Compliance") {
 			navigate("/compliance")
 		} else if (page === "invoices") {
@@ -74,6 +76,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
 				return <CustomerLoads />;
 			case "reports":
 				return <MakeReport />;
+			case "messages":
+				return <Messages />;
 			case "compliance":
 				return <Compliance />;
 			case "manager":
@@ -131,6 +135,7 @@ function App() {
 				<Route path="/customerloads" element={<Dashboard initialPage="customerloads" />} />
 				<Route path="/customer" element={<Dashboard initialPage="customer" />} />
 				<Route path="/reports" element={<Dashboard key="reports" initialPage="reports" />} />
+				<Route path="/messages" element={<Dashboard key="messages" initialPage="messages" />} />
 				<Route path="/invoices" element={<Dashboard initialPage="invoices" />} />
 				<Route path="/help" element={<Dashboard initialPage="help" />} />
 			</Routes>
