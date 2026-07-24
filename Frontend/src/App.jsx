@@ -14,6 +14,7 @@ import Compliance from "./compliance.jsx";
 import Invoices from "./invoices.jsx";
 import Help from "./help.jsx";
 import Settings from "./settings.jsx";
+import DriverPerformance from "./pages/DriverPerformance";
 
 function Dashboard({ initialPage = "loadassignments" }) {
 	const [currentPage, setCurrentPage] = useState(initialPage);
@@ -139,6 +140,7 @@ function App() {
 				<Route path="/invoices" element={<Dashboard initialPage="invoices" />} />
 				<Route path="/help" element={<Dashboard initialPage="help" />} />
 				<Route path="/settings" element={<Dashboard initialPage="settings" />} />
+				<Route path="/driver-performance" element={<DriverPerformance />} />
 			</Routes>
 		</BrowserRouter>
 	);
