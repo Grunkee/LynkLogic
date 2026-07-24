@@ -112,7 +112,15 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 					<button
 						key={item.id}
 						type="button"
-						onClick={item.id === "logout" ? handleLogout : item.id === "help" ? () => navigate("/help") : undefined}
+						onClick={() => {
+						    if (item.id === "logout") {
+						        handleLogout();
+						    } else if (item.id === "help") {
+						        navigate("/help");
+						    } else if (item.id === "settings" && onNavigate) {
+						        onNavigate("settings");
+						    }
+						}}
 						style={{
 							display: "flex",
 							alignItems: "center",
@@ -127,7 +135,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 							padding: 0,
 						}}
 					>
-						<span style={{ width: "14px", height: "14px", borderRadius: "999px", background: "#111827" }} />
+						<span style={{ width: "14px", height: "14px", borderRadius: "999px", background: currentPage == item.id ? "#f8fafc" : "#111827" }} />
 						{item.label}
 					</button>
 				))}
