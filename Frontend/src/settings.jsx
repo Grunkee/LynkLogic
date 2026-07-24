@@ -9,14 +9,18 @@ export default function Settings() {
     
     const [role, setRole] = useState("");
 
-    const [lNumber, setlNumber] = useState("D-9876543");
+    const [lNumber, setlNumber] = useState("S9876543");
     const [licenseExpiry, setLicenseExpiry] = useState("2028-11-30");
     const [licenseClass, setLicenseClass] = useState("A");
     const [birthDate, setBirthDate] = useState("2028-11-30");
     const [homeAdd, setHomeAdd] = useState("123 University Ave.");
     const [department, setDepartment] = useState("Fleet Operations");
-    const [shiftAssignment, setShiftAssignment] = useState("Day Shift");
+    const [managerHomeAdd, setManagerHomeAdd] = useState("456 Park Street");
+    const [escalationPhone, setEscalationPhone] = useState("(555) 999-8877");
     const [companyName, setCompanyName] = useState("Acme Logistics");
+    const [officeAddress, setOfficeAddress] = useState("789 Commercial Blvd");
+    const [companyPhone, setCompanyPhone] = useState("(555) 444-3322");
+    const [billingAddress, setBillingAddress] = useState("789 Commercial Blvd, Suite 100");
 
     const [statusMsg, setStatusMsg] = useState({ type: '', text: '' });
 
@@ -71,7 +75,7 @@ export default function Settings() {
                             placeholder="e.g. Samara"
                             value={firstName} 
                             onChange={(e) => setFirstName(e.target.value)}
-                            style={{ padding: "12px", borderRadius: "8px", border: "1px solid #cbd5e1", background: "#ffffff" }}
+                            style={inputStyle}
                         />
                     </div>
                     <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "6px" }}>
@@ -81,7 +85,7 @@ export default function Settings() {
                             placeholder="e.g. Cote"
                             value={lastName} 
                             onChange={(e) => setLastName(e.target.value)}
-                            style={{ padding: "12px", borderRadius: "8px", border: "1px solid #cbd5e1", background: "#ffffff" }}
+                            style={inputStyle}
                         />
                     </div>
                 </div>
@@ -92,7 +96,7 @@ export default function Settings() {
                         type="email" 
                         value={email} 
                         onChange={(e) => setEmail(e.target.value)}
-                        style={{ padding: "12px", borderRadius: "8px", border: "1px solid #cbd5e1", background: "#ffffff" }}
+                        style={inputStyle}
                     />
                 </div>
 
@@ -103,7 +107,7 @@ export default function Settings() {
                         placeholder="e.g. (555) 000-0000"
                         value={phone} 
                         onChange={(e) => setPhone(e.target.value)}
-                        style={{ padding: "12px", borderRadius: "8px", border: "1px solid #cbd5e1", background: "#ffffff" }}
+                        style={inputStyle}
                     />
                 </div>
 
@@ -136,7 +140,6 @@ export default function Settings() {
                             <option value=""></option>
                             <option value="driver">Driver</option>
                             <option value="manager">Manager</option>
-                            <option value="dispatcher">Dispatcher</option>
                             <option value="customer">Customer</option>
                         </select>
                     </div>
@@ -193,7 +196,7 @@ export default function Settings() {
                     )}
 
                     {role === 'manager' && (
-                        <div style={{ background: "#f8fafc", padding: "16px", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: "14px" }}>
+                        <div style={{ background: "#ffffff", padding: "16px", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: "14px" }}>
                             <h4 style={{ margin: 0, color: "#0B3C5D" }}>Manager Details</h4>
                             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                                 <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Department</label>
@@ -207,29 +210,31 @@ export default function Settings() {
                                     <option value="Logistics & Finance">Logistics & Finance</option>
                                 </select>
                             </div>
-                        </div>
-                    )}
-
-                    {role === 'dispatcher' && (
-                        <div style={{ background: "#f8fafc", padding: "16px", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: "14px" }}>
-                            <h4 style={{ margin: 0, color: "#0B3C5D" }}>Dispatcher Information</h4>
                             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                                <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Shift Assignment</label>
-                                <select 
-                                    value={shiftAssignment} 
-                                    onChange={(e) => setShiftAssignment(e.target.value)}
+                                <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Home Address</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="e.g. 456 Park Street"
+                                    value={managerHomeAdd} 
+                                    onChange={(e) => setManagerHomeAdd(e.target.value)}
                                     style={inputStyle}
-                                >
-                                    <option value="Day Shift">Day Shift</option>
-                                    <option value="Night Shift">Night Shift</option>
-                                    <option value="Weekend Cover">Weekend Cover</option>
-                                </select>
+                                />
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                                <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Manager Escalation Phone / Direct Line</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="e.g. (555) 999-8877"
+                                    value={escalationPhone} 
+                                    onChange={(e) => setEscalationPhone(e.target.value)}
+                                    style={inputStyle}
+                                />
                             </div>
                         </div>
                     )}
 
                     {role === 'customer' && (
-                        <div style={{ background: "#f8fafc", padding: "16px", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: "14px" }}>
+                        <div style={{ background: "#ffffff", padding: "16px", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: "14px" }}>
                             <h4 style={{ margin: 0, color: "#0B3C5D" }}>Company Info</h4>
                             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                                 <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Company / Business Name</label>
@@ -238,6 +243,16 @@ export default function Settings() {
                                     placeholder="e.g. Acme Freight Co."
                                     value={companyName} 
                                     onChange={(e) => setCompanyName(e.target.value)}
+                                    style={inputStyle}
+                                />
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                                <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Office Address</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="e.g. 789 Commercial Blvd"
+                                    value={officeAddress} 
+                                    onChange={(e) => setOfficeAddress(e.target.value)}
                                     style={inputStyle}
                                 />
                             </div>
