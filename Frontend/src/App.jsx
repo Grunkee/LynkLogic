@@ -13,6 +13,7 @@ import MakeReport from "./makereport.jsx";
 import Compliance from "./compliance.jsx";
 import Invoices from "./invoices.jsx";
 import Help from "./help.jsx";
+import Settings from "./settings.jsx";
 
 function Dashboard({ initialPage = "loadassignments" }) {
 	const [currentPage, setCurrentPage] = useState(initialPage);
@@ -47,6 +48,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
     		navigate("/invoices")
 		} else if (page === "help") {
 			navigate("/help")
+		} else if (page === "settings") {
+			navigate("/settings");
 		} else {
 			navigate("/dashboard");
 		}
@@ -82,6 +85,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
     			return <Invoices />;
 			case "help":
 				return <Help />;
+			case "settings":
+				return <Settings />;
 			default:
 				return <LoadTable />;
 		}
@@ -133,6 +138,7 @@ function App() {
 				<Route path="/reports" element={<Dashboard key="reports" initialPage="reports" />} />
 				<Route path="/invoices" element={<Dashboard initialPage="invoices" />} />
 				<Route path="/help" element={<Dashboard initialPage="help" />} />
+				<Route path="/settings" element={<Dashboard initialPage="settings" />} />
 			</Routes>
 		</BrowserRouter>
 	);
