@@ -2,25 +2,25 @@ import React, { useState, useEffect } from 'react';
 export default function Settings() {
     const [saving, setSaving] = useState(false);
 
-    const [firstName, setFirstName] = useState("Samara");
-    const [lastName, setLastName] = useState("Cote");
-    const [email, setEmail] = useState("cote8782@mylaurier.ca");
-    const [phone, setPhone] = useState("(555) 019-2834");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     
     const [role, setRole] = useState("");
 
-    const [lNumber, setlNumber] = useState("S9876543");
-    const [licenseExpiry, setLicenseExpiry] = useState("2028-11-30");
-    const [licenseClass, setLicenseClass] = useState("A");
-    const [birthDate, setBirthDate] = useState("2028-11-30");
-    const [homeAdd, setHomeAdd] = useState("123 University Ave.");
-    const [department, setDepartment] = useState("Fleet Operations");
-    const [managerHomeAdd, setManagerHomeAdd] = useState("456 Park Street");
-    const [escalationPhone, setEscalationPhone] = useState("(555) 999-8877");
-    const [companyName, setCompanyName] = useState("Acme Logistics");
-    const [officeAddress, setOfficeAddress] = useState("789 Commercial Blvd");
-    const [companyPhone, setCompanyPhone] = useState("(555) 444-3322");
-    const [billingAddress, setBillingAddress] = useState("789 Commercial Blvd, Suite 100");
+    const [lNumber, setlNumber] = useState("");
+    const [licenseExpiry, setLicenseExpiry] = useState("");
+    const [licenseClass, setLicenseClass] = useState("");
+    const [birthDate, setBirthDate] = useState("");
+    const [homeAdd, setHomeAdd] = useState("");
+    const [department, setDepartment] = useState("");
+    const [managerHomeAdd, setManagerHomeAdd] = useState("");
+    const [escalationPhone, setEscalationPhone] = useState("");
+    const [companyName, setCompanyName] = useState("");
+    const [officeAddress, setOfficeAddress] = useState("");
+    const [companyPhone, setCompanyPhone] = useState("");
+    const [billingAddress, setBillingAddress] = useState("");
 
     const [statusMsg, setStatusMsg] = useState({ type: '', text: '' });
 
@@ -41,7 +41,7 @@ export default function Settings() {
 
         setTimeout(() => {
             setSaving(false);
-            setStatusMsg({ type: 'success', text: 'Profile preferences updated locally!' });
+            setStatusMsg({ type: 'success', text: 'Profile preferences updated!' });
         }, 500);
     }
 
@@ -72,7 +72,7 @@ export default function Settings() {
                         <label style={{ fontWeight: "bold", color: "#334155", fontSize: "14px" }}>First Name</label>
                         <input 
                             type="text" 
-                            placeholder="e.g. Samara"
+                            placeholder="e.g. John"
                             value={firstName} 
                             onChange={(e) => setFirstName(e.target.value)}
                             style={inputStyle}
@@ -82,7 +82,7 @@ export default function Settings() {
                         <label style={{ fontWeight: "bold", color: "#334155", fontSize: "14px" }}>Last Name</label>
                         <input 
                             type="text" 
-                            placeholder="e.g. Cote"
+                            placeholder="e.g. Smith"
                             value={lastName} 
                             onChange={(e) => setLastName(e.target.value)}
                             style={inputStyle}
@@ -94,6 +94,7 @@ export default function Settings() {
                     <label style={{ fontWeight: "bold", color: "#334155", fontSize: "14px" }}>Email Address</label>
                     <input 
                         type="email" 
+                        placeholder='e.g. johnsmith@gmail.com'
                         value={email} 
                         onChange={(e) => setEmail(e.target.value)}
                         style={inputStyle}
@@ -104,7 +105,7 @@ export default function Settings() {
                     <label style={{ fontWeight: "bold", color: "#334155", fontSize: "14px" }}>Phone Number</label>
                     <input 
                         type="text" 
-                        placeholder="e.g. (555) 000-0000"
+                        placeholder="e.g. (800) 000-0000"
                         value={phone} 
                         onChange={(e) => setPhone(e.target.value)}
                         style={inputStyle}
@@ -168,7 +169,8 @@ export default function Settings() {
                             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                                 <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Class</label>
                                 <input 
-                                    type="text" 
+                                    type="text"
+                                    placeholder="e.g. A"
                                     value={licenseClass} 
                                     onChange={(e) => setLicenseClass(e.target.value)}
                                     style={inputStyle}
@@ -177,7 +179,7 @@ export default function Settings() {
                             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                                 <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Date of Birth</label>
                                 <input 
-                                    type="text" 
+                                    type="date" 
                                     value={birthDate} 
                                     onChange={(e) => setBirthDate(e.target.value)}
                                     style={inputStyle}
@@ -186,7 +188,8 @@ export default function Settings() {
                             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                                 <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Home Address</label>
                                 <input 
-                                    type="text" 
+                                    type="text"
+                                    placeholder="e.g. 123 University Ave."
                                     value={homeAdd} 
                                     onChange={(e) => setHomeAdd(e.target.value)}
                                     style={inputStyle}
@@ -221,10 +224,10 @@ export default function Settings() {
                                 />
                             </div>
                             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                                <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Manager Escalation Phone / Direct Line</label>
+                                <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Manager Escalation Phone</label>
                                 <input 
                                     type="text" 
-                                    placeholder="e.g. (555) 999-8877"
+                                    placeholder="e.g. (800) 999-8877"
                                     value={escalationPhone} 
                                     onChange={(e) => setEscalationPhone(e.target.value)}
                                     style={inputStyle}
@@ -240,7 +243,7 @@ export default function Settings() {
                                 <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Company / Business Name</label>
                                 <input 
                                     type="text" 
-                                    placeholder="e.g. Acme Freight Co."
+                                    placeholder="e.g. LynkLogic."
                                     value={companyName} 
                                     onChange={(e) => setCompanyName(e.target.value)}
                                     style={inputStyle}
@@ -250,7 +253,17 @@ export default function Settings() {
                                 <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Office Address</label>
                                 <input 
                                     type="text" 
-                                    placeholder="e.g. 789 Commercial Blvd"
+                                    placeholder="e.g. 789 University Ave."
+                                    value={officeAddress} 
+                                    onChange={(e) => setOfficeAddress(e.target.value)}
+                                    style={inputStyle}
+                                />
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                                <label style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}>Office Phone</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="e.g. (800) 999-9999"
                                     value={officeAddress} 
                                     onChange={(e) => setOfficeAddress(e.target.value)}
                                     style={inputStyle}
