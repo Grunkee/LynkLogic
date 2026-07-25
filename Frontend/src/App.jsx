@@ -48,7 +48,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
 		} else if (page == "Compliance") {
 			navigate("/compliance")
 		} else if (page === "invoices") {
-    		navigate("/invoices")
+			navigate("/invoices")
 		} else if (page === "help") {
 			navigate("/help")
 		} else if (page === "settings") {
@@ -87,7 +87,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
 			case "manager":
 				return <Manager />;
 			case "invoices":
-    			return <Invoices />;
+				return <Invoices />;
 			case "help":
 				return <Help />;
 			case "settings":
@@ -102,28 +102,28 @@ function Dashboard({ initialPage = "loadassignments" }) {
 			initialPage === "customerloads" ? "customer" :
 				initialPage === "shipments" ? "manager" : "dispatcher";
 
-  return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <header style={{ background: "#0B3C5D", color: "white", padding: "16px 24px", boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-			<img src="/src/assets/logo.png" style={{ height: "40px" }} />
-          </div>
-          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-            <button style={{ border: "1px solid rgba(255,255,255,0.25)", borderRadius: "999px", background: "rgba(255,255,255,0.08)", color: "white", padding: "10px 16px", cursor: "pointer" }}>
-              Today
-            </button>
-          </div>
-        </div>
-      </header>
-      <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
-		<Sidebar currentPage={currentPage} onNavigate={handleNavigate} role={currentRole} />
-        <main style={{ flex: 1, background: "#f5f5f5" }}>
-          {renderMainContent()}
-        </main>
-      </div>
-    </div>
-  );
+	return (
+		<div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+			<header style={{ background: "#0B3C5D", color: "white", padding: "16px 24px", boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)" }}>
+				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+					<div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+						<img src="/src/assets/logo.png" style={{ height: "40px" }} />
+					</div>
+					<div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+						<button style={{ border: "1px solid rgba(255,255,255,0.25)", borderRadius: "999px", background: "rgba(255,255,255,0.08)", color: "white", padding: "10px 16px", cursor: "pointer" }}>
+							Today
+						</button>
+					</div>
+				</div>
+			</header>
+			<div style={{ display: "flex", flex: 1, minHeight: 0 }}>
+				<Sidebar currentPage={currentPage} onNavigate={handleNavigate} role={currentRole} />
+				<main style={{ flex: 1, background: "#f5f5f5" }}>
+					{renderMainContent()}
+				</main>
+			</div>
+		</div>
+	);
 }
 
 function App() {
@@ -146,6 +146,10 @@ function App() {
 				<Route path="/help" element={<Dashboard initialPage="help" />} />
 				<Route path="/settings" element={<Dashboard initialPage="settings" />} />
 				<Route path="/driver-performance" element={<DriverPerformance />} />
+				<Route path="/invoices" element={<Dashboard key="invoices" initialPage="invoices" />} />
+
+
+
 			</Routes>
 		</BrowserRouter>
 	);
