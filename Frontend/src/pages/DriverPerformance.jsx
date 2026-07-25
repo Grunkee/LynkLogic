@@ -26,22 +26,17 @@ function DriverPerformance() {
     loadDrivers();
   }, []);
 
-
   async function loadDrivers() {
 
     const { data, error } = await supabase
       .from("driver_hours")
       .select("*");
-
-
     if (error) {
       console.log(error);
       return;
     }
-
     setDrivers(data);
   }
-
 
 return (
   <div className="dashboard">
