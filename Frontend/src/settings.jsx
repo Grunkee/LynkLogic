@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from './supabase_client';
+
 export default function Settings() {
     const [saving, setSaving] = useState(false);
 
@@ -34,16 +36,38 @@ export default function Settings() {
         outline: "none"
     };
 
-    function handleSave(e) {
-        e.preventDefault();
-        setSaving(true);
-        setStatusMsg({ type: '', text: '' });
+async function handleSave(e) {
+    e.preventDefault();
+    setSaving(true);
+    setStatusMsg({ type: '', text: '' });
 
-        setTimeout(() => {
-            setSaving(false);
-            setStatusMsg({ type: 'success', text: 'Profile preferences updated!' });
-        }, 500);
+    if (!email) {
+        setStatusMsg({ type: 'error', text: 'Email is required to update profile.' });
+        setSaving(false);
+        return;
     }
+
+    try {
+        const { data, error } = await supabase
+            .from('users') 
+            .update({
+                First_Name: firstName,
+                Last_name: lastName,
+                Phone_Number: phone,
+                role: role
+            })
+            .eq('email', email.trim().toLowerCase());
+
+        if (error) throw error;
+
+        setStatusMsg({ type: 'success', text: 'Profile preferences updated!' });
+    } catch (err) {
+        console.error('Error updating user:', err);
+        setStatusMsg({ type: 'error', text: err.message || 'Failed to update user profile.' });
+    } finally {
+        setSaving(false);
+    }
+}
 
     return (
         <div style={{ padding: "60px 24px", maxWidth: "600px", margin: "0 auto", fontFamily: "Arial" }}>
