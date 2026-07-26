@@ -68,6 +68,8 @@ export default function InvoiceTable() {
   const [invoices, setInvoices] = useState(DUMMY_INVOICES);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [invoiceNotifications, setInvoiceNotifications] = useState([]);
+const [showInvoiceNotifications, setShowInvoiceNotifications] = useState(false);
 
   const filteredInvoices = invoices.filter((invoice) => {
     const matchesStatus = statusFilter === "All" || invoice.status === statusFilter;
@@ -81,14 +83,41 @@ export default function InvoiceTable() {
   });
 
   function handleStatusChange(invoiceId, newStatus) {
-    setInvoices((currentInvoices) =>
-      currentInvoices.map((invoice) =>
-        invoice.invoiceId === invoiceId
-          ? { ...invoice, status: newStatus }
-          : invoice
-      )
-    );
-  }
+  const invoiceToUpdate = invoices.find(
+    (invoice) => invoice.invoiceId === invoiceId
+  );
+
+  if (!invoiceToUpdate || invoiceToUpdate.status === newStatus) return;
+
+  setInvoices((currentInvoices) =>
+    currentInvoices.map((invoice) =>
+      invoice.invoiceId === invoiceId
+        ? { ...invoice, status: newStatus }
+        : invoice
+    )
+  );
+
+  const newNotification = {
+    id: Date.now(),
+    invoiceId: invoiceToUpdate.invoiceId,
+    message: `${invoiceToUpdate.invoiceId} changed from ${invoiceToUpdate.status} to ${newStatus}.`,
+    timeUpdated: new Date().toLocaleString(),
+  };
+
+  setInvoiceNotifications((currentNotifications) => [
+    newNotification,
+    ...currentNotifications,
+  ]);
+}
+
+function removeInvoiceNotification(notificationId) {
+  setInvoiceNotifications((currentNotifications) =>
+    currentNotifications.filter(
+      (notification) => notification.id !== notificationId
+    )
+  );
+}
+
 
   function handlePrintInvoice(invoice) {
     alert(`Invoice ${invoice.invoiceId} is ready to print.`);
@@ -104,17 +133,71 @@ export default function InvoiceTable() {
       }}
     >
       <div
-        style={{
-          background: COLORS.navy,
-          color: COLORS.white,
-          padding: "16px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <h2>Invoices</h2>
-      </div>
+  style={{
+    background: COLORS.navy,
+    color: COLORS.white,
+    padding: "16px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  }}
+>
+  <h2>Invoices</h2>
+
+  <button
+    onClick={() => setShowInvoiceNotifications(!showInvoiceNotifications)}
+    style={{
+      background: COLORS.white,
+      color: COLORS.navy,
+      padding: "10px 16px",
+      border: "none",
+      cursor: "pointer",
+      fontWeight: "bold",
+      borderRadius: "6px",
+    }}
+  >
+    Invoice Notifications ({invoiceNotifications.length})
+  </button>
+</div>
+
+{showInvoiceNotifications && (
+  <div
+    style={{
+      background: "white",
+      padding: "16px",
+      marginTop: "10px",
+      marginBottom: "12px",
+      border: "1px solid #ddd",
+    }}
+  >
+    <h3>Invoice Notifications</h3>
+
+    {invoiceNotifications.length === 0 ? (
+      <p>No invoice notifications yet.</p>
+    ) : (
+      invoiceNotifications.map((notification) => (
+        <div
+          key={notification.id}
+          onClick={() => removeInvoiceNotification(notification.id)}
+          style={{
+            padding: "10px",
+            marginBottom: "8px",
+            background: "#e8f4ff",
+            borderLeft: `4px solid ${COLORS.navy}`,
+            cursor: "pointer",
+          }}
+        >
+          <strong>{notification.invoiceId}</strong>
+          <p>{notification.message}</p>
+          <small>Updated: {notification.timeUpdated}</small>
+          <p style={{ fontSize: "12px", fontWeight: "bold" }}>
+            Click to dismiss
+          </p>
+        </div>
+      ))
+    )}
+  </div>
+)}
 
       <div
         style={{
