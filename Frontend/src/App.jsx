@@ -16,6 +16,7 @@ import Help from "./help.jsx";
 import Settings from "./settings.jsx";
 import DriverPerformance from "./pages/DriverPerformance";
 import Messages from "./messages.jsx";
+import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 
 function Dashboard({ initialPage = "loadassignments" }) {
 	const [currentPage, setCurrentPage] = useState(initialPage);
@@ -147,6 +148,7 @@ function App() {
 				<Route path="/settings" element={<Dashboard initialPage="settings" />} />
 				<Route path="/driver-performance" element={<DriverPerformance />} />
 				<Route path="/invoices" element={<Dashboard key="invoices" initialPage="invoices" />} />
+				<Route path="/analytics" element={<AnalyticsDashboard />} />
 
 
 
