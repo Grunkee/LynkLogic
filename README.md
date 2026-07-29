@@ -15,7 +15,7 @@ Before running this project, ensure you have the following installed:
 ## Setup & Installation Instructions
 
 ### 1. Clone the Repository
-\`\`\`bash
+\`\`\`
 git clone https://github.com/Grunkee/LynkLogic.git
 cd LynkLogic
 \`\`\`
