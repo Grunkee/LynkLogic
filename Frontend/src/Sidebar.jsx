@@ -18,6 +18,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 		{ id: "hours", label: "Schedule", roles: ["driver"] },
 		{ id: "messages", label: "Messages" },
 		{ id: "invoices", label: "Invoices", roles: ["manager"] },
+		{ id: "analytics", label: "Analytics Dashboard", roles: ["manager"] },
 	];
 
 	const mainItems = role === "driver" ? driverItems : coreDashboardItems

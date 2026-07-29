@@ -46,8 +46,10 @@ function Dashboard({ initialPage = "loadassignments" }) {
 			navigate("/reports")
 		} else if (page === "messages") {
 			navigate("/messages")
-		} else if (page == "Compliance") {
+		} else if (page == "Compliance") {		
 			navigate("/compliance")
+		} else if (page === "analytics") {
+    		navigate("/analytics")
 		} else if (page === "invoices") {
 			navigate("/invoices")
 		} else if (page === "help") {
@@ -87,6 +89,8 @@ function Dashboard({ initialPage = "loadassignments" }) {
 				return <Compliance />;
 			case "manager":
 				return <Manager />;
+			case "analytics":
+    			return <AnalyticsDashboard />;
 			case "invoices":
 				return <Invoices />;
 			case "help":
@@ -139,6 +143,7 @@ function App() {
 				<Route path="/hours" element={<Dashboard key="hours" initialPage="hours" />} />
 				<Route path="/compliance" element={<Dashboard initialPage="compliance" />} />
 				<Route path="/manager" element={<Dashboard initialPage="manager" />} />
+				<Route path="/analytics" element={<Dashboard initialPage="analytics" />} />
 				<Route path="/customerloads" element={<Dashboard initialPage="customerloads" />} />
 				<Route path="/customer" element={<Dashboard initialPage="customer" />} />
 				<Route path="/reports" element={<Dashboard key="reports" initialPage="reports" />} />
