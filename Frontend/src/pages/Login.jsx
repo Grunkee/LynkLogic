@@ -34,7 +34,7 @@ export default function Login() {
 					.select("role")
 					.eq("email", email)
 					.single()
-	
+
 				navigate("/dashboard")
 			}
 		} catch (error) {
@@ -48,6 +48,7 @@ export default function Login() {
 
 		<div className='login-container'>
 			<div className='login-card'>
+				<img src="/src/assets/logo.png" alt="Logo" className="login-logo" />
 				<h2 className='login-title'>
 					{signUp ? 'Sign Up' : 'Log In'}
 				</h2>

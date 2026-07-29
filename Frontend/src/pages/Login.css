@@ -28,6 +28,13 @@
 	gap: 1rem;
 }
 
+.login-logo {
+  display: block;
+  margin: 0 auto 1rem auto;  /* centers it, adds bottom margin */
+  width: 120px;               /* or height: auto; width: 60%; etc. */
+  height: auto;
+}
+
 .form-group label {
 	gap: 1rem;
 	font-size: 0.85rem;
