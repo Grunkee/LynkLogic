@@ -14,11 +14,11 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 		{ id: "loadassignments", label: "Load Assignments", roles: ["dispatcher"] },
 		{ id: "Compliance", label: "Compliance Records", roles: ["manager"] },
 		{ id: "shipments", label: "Shipments", roles: ["manager"] },
+		{ id: "analytics", label: "Analytics Dashboard", roles: ["manager"] },
 		{ id: "customerloads", label: "Track My Deliveries", roles: ["customer"] },
 		{ id: "hours", label: "Schedule", roles: ["driver"] },
 		{ id: "messages", label: "Messages" },
 		{ id: "invoices", label: "Invoices", roles: ["manager"] },
-		{ id: "analytics", label: "Analytics Dashboard", roles: ["manager"] },
 	];
 
 	const mainItems = role === "driver" ? driverItems : coreDashboardItems
