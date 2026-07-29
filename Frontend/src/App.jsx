@@ -46,7 +46,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
 			navigate("/reports")
 		} else if (page === "messages") {
 			navigate("/messages")
-		} else if (page == "Compliance") {		
+		} else if (page == "compliance") {		
 			navigate("/compliance")
 		} else if (page === "analytics") {
     		navigate("/analytics")

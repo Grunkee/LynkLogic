@@ -12,7 +12,7 @@ export default function Sidebar({ currentPage, onNavigate, role }) {
 
 	const coreDashboardItems = [
 		{ id: "loadassignments", label: "Load Assignments", roles: ["dispatcher"] },
-		{ id: "Compliance", label: "Compliance Records", roles: ["manager"] },
+		{ id: "compliance", label: "Compliance Records", roles: ["manager"] },
 		{ id: "shipments", label: "Shipments", roles: ["manager"] },
 		{ id: "analytics", label: "Analytics Dashboard", roles: ["manager"] },
 		{ id: "customerloads", label: "Track My Deliveries", roles: ["customer"] },
