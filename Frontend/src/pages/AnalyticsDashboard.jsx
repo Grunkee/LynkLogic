@@ -92,7 +92,7 @@ function AnalyticsDashboard() {
     datasets: [
       {
         label: "Hours Worked",
-        data: drivers.map((driver) => driver.hours),
+        data: drivers.map((driver) => driver.total_hours),
         backgroundColor: "#0B3C5D",
       },
       {
