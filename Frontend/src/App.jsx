@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import LoadTable from "./loadtable";
 import LoadShipments from "./loadshipments";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-import { DATA_TEST } from "./loadhours.jsx";
 import Login from "./pages/Login.jsx";
 import Manager from "./pages/Manager.jsx";
 import CustomerLoads from "./CustomerLoads";
@@ -21,10 +20,6 @@ import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 function Dashboard({ initialPage = "loadassignments" }) {
 	const [currentPage, setCurrentPage] = useState(initialPage);
 	const navigate = useNavigate();
-
-	const [isClockedIn, setIsClockedIn] = useState(false);
-	const [isAvailable, setIsAvailable] = useState(true);
-	const [weeklyLogs, setWeeklyLogs] = useState(DATA_TEST);
 
 	const handleAddHoursLog = (newLog) => {
 		setWeeklyLogs((prevLogs) => [newLog, ...prevLogs]);
@@ -69,15 +64,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
 				return <LoadShipments />;
 			case "hours":
 				return (
-					<Hours
-						weeklyLogs={weeklyLogs}
-						weeklyHoursLogged="23.0"
-						isClockedIn={isClockedIn}
-						isAvailable={isAvailable}
-						onClockToggle={() => setIsClockedIn(!isClockedIn)}
-						onAvailabilityToggle={() => setIsAvailable(!isAvailable)}
-						onAddLog={handleAddHoursLog}
-					/>
+					<Hours/>
 				);
 			case "customerloads":
 				return <CustomerLoads />;
