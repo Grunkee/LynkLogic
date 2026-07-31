@@ -63,9 +63,7 @@ function Dashboard({ initialPage = "loadassignments" }) {
 			case "shipments":
 				return <LoadShipments />;
 			case "hours":
-				return (
-					<Hours/>
-				);
+				return <Hours/>;
 			case "customerloads":
 				return <CustomerLoads />;
 			case "reports":
